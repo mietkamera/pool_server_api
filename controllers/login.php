@@ -69,16 +69,25 @@ class Login extends Controller {
     $this->view->render('login/auth');
     $this->view->render('footer'); 
   }
+
+  //
+  // Rendert den Login-Dialog fuer den Operator
+  //
+  function auth_op($st,$redirect='') {
+  	$this->view->shorttag = $st;
+    $this->view->redirect = $redirect;
+  	$this->view->render('header');
+    $this->view->render('login/auth_op');
+    $this->view->render('footer'); 
+  }
   
   //
   // Rendert die Hile-Seite des Moduls
   //
   function help() {
   	require('controllers/help.php');
-  	$this->view->help = new Help();
-  	$this->view->render('header');
-  	$this->view->render('login/help');
-  	$this->view->render('footer');
+  	$this->help = new Help('login','help');
+  	$this->help->render_module_help();
   }
 
 }

@@ -13,10 +13,8 @@ class Mjpeg extends Controller {
   
   function help() {
   	require('controllers/help.php');
-  	$this->view->help = new Help();
-  	$this->view->render('header');
-  	$this->view->render('mjpeg/help');
-  	$this->view->render('footer');
+  	$this->help = new Help('mjpeg','help');
+  	$this->help->render_module_help();
   }
   
   //
@@ -35,6 +33,31 @@ class Mjpeg extends Controller {
   	    break;
   	  default:
   	  	$size = '2048x1536';
+  	}
+  	
+  	$image_dir = _SHORT_DIR_.'/'.$st.'/01';
+  	switch($date) {
+  	  case 'lastDay':
+  	    if (is_link($image_dir.'/lastimage.jpg')) {
+  	      $target = readlink($image_dir.'/lastimage.jpg');
+  	      list($y,$m,$d) = explode('/',$target);
+  	      $date = $y.$m.$d;
+  	    }
+  	  	break;
+  	  case 'lastMonth':
+   	    if (is_link($image_dir.'/lastimage.jpg')) {
+  	      $target = readlink($image_dir.'/lastimage.jpg');
+  	      list($y,$m,$d) = explode('/',$target);
+  	      $date = $y.$m;
+  	    }
+  	  	break;
+  	  case 'lastYear':
+  	    if (is_link($image_dir.'/lastimage.jpg')) {
+  	      $target = readlink($image_dir.'/lastimage.jpg');
+  	      list($y,$m,$d) = explode('/',$target);
+  	      $date = $y;
+  	    }
+  	  	break;
   	}
   	
   	list($w,$h) = explode('x',$size);

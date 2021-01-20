@@ -1,0 +1,41 @@
+.controlBar {
+  position: absolute; /* absolute position (so we can position it where we want)*/
+  top: 0px; /* position will be on bottom */
+  left: 0px; 
+  width: 100%; 
+  background-color: black;
+  color: white;
+  opacity: 0.7; /* transparency */
+  filter: alpha(opacity=70); /* IE transparency */
+}
+
+.bg-overlay:after {
+  content:" ";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0,0,0, 0.25);
+  z-index: 2
+}
+
+.auto-scale {
+  width: 100%;
+  height:auto;
+}
+
+.imgTag {
+  position: absolute; /* absolute position (so we can position it where we want)*/
+  top: 0px; /* position will be on bottom */
+  left: 0px; 
+  width: 100%; 
+  background-color: silver;
+  color: white;
+  opacity: 0.6; /* transparency */
+  filter: alpha(opacity=60); /* IE transparency */
+}
+
+

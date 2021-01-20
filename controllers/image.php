@@ -12,10 +12,8 @@ class Image extends Controller {
   
   function help() {
   	require('controllers/help.php');
-  	$this->view->help = new Help();
-  	$this->view->render('header');
-  	$this->view->render('image/help');
-  	$this->view->render('footer');
+  	$this->help = new Help('image','help');
+  	$this->help->render_module_help();
   }
   
   //
@@ -96,6 +94,7 @@ class Image extends Controller {
   	  $images[] = readlink(_SHORT_DIR_.'/'.$st.'/01/lastimage.jpg')."\n";
   	} else
       $images = $this->get_image_file_names($st,$date);
+
     if (count($images)>0) {
       switch (strlen($date)) {
         case 0:
@@ -149,6 +148,93 @@ class Image extends Controller {
     
     $this->image_jpg($filename,$size);
   }
+
+  //
+  // Gibt ein Bild aus einer Datei als Downloadlink zurück
+  //
+  function download($st,$parameter='') {
+  	$param = array_map('trim',explode('.',$parameter));
+  	$date = empty($param[0])?'':$param[0];
+
+  	$y = substr($date,0,4);
+  	$m = substr($date,4,2);
+  	$d = substr($date,6,2);
+  	
+  	$filename = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+    if (!is_file($filename)) {
+      $filename = 'public/images/empty.jpg';     
+    }
+
+    define('CHUNK_SIZE', 1024*1024); // Size (in bytes) of tiles chunk
+
+    $size = @getimagesize($filename);
+    if (! isset($size['mime'])) {
+      $size['mime'] = 'video/mp4';
+    }
+    $handle = @fopen($filename, "rb");
+    $buffer = '';
+    if ($size && $handle) {
+      header("Content-type: {$size['mime']}");
+      header("Content-Length: " . filesize($filename));
+      header("Content-Disposition: attachment; filename=".$st.'_'.$date.'.jpg');
+      header('Content-Transfer-Encoding: binary');
+      header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+      while (!feof($handle)) {
+        $buffer = fread($handle, CHUNK_SIZE);
+        echo $buffer;
+        ob_flush();
+        flush();
+      }
+      exit;
+    }
+  }
+  
+  
+  //
+  // gib den Thumbnail eines bestimmten Bildes zurück
+  //
+  function thumb($st,$parameter='') {
+  	$param = array_map('trim',explode('.',$parameter));
+  	$date = empty($param[0])?'':$param[0];
+  	$width = '240';
+
+  	$y = substr($date,0,4);
+  	$m = substr($date,4,2);
+  	$d = substr($date,6,2);
+  	
+  	$filename = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+  	$thumbname = _SHORT_DIR_.'/'.$st.'/01/'.$width.'/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+    header("Content-type: image/jpeg");
+    if (!is_file($filename)) {
+      $w = 240;
+      $h = 180;
+      $text = 'sorry :-('."\n".'Kein Thumbnail vorhanden!'."\n\n";
+      $img = imagecreatetruecolor($w,$h);
+      $tcolor = imagecolorallocate($img, 255, 255, 255);
+      $bcolor = imagecolorallocate($img, 0, 64, 128);
+      $font = 'DejaVuSans';
+
+      imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);
+      imagettftext($img, ceil($w/32), 0, 30, 100, $tcolor, $font, $text);
+      imagejpeg($img);
+      imagedestroy($img);
+    } else {
+      if (!is_file($thumbname)) {
+      	$size=@getimagesize($filename);
+        $breite = $size[0];
+        $hoehe = $size[1];
+        $thumbdir = _SHORT_DIR_.'/'.$st.'/01/'.$width.'/'.$y.'/'.$m.'/'.$d;
+        if (!is_dir($thumbdir)) mkdir($thumbdir, 0770, true);
+        $height = intval($hoehe*$width/$breite);
+        $myImage = @ImageCreateFromJPEG($filename);
+        $myThumb = @ImageCreateTrueColor($width,$height);
+        @ImageCopyResized($myThumb,$myImage,0,0,0,0,$width, $height, $breite, $hoehe);
+        @ImageJPEG($myThumb,$thumbname);
+      } 
+      readfile($thumbname);
+    }
+  }
   
   function live($st,$parameter="") {
   	$param = array_map('trim',explode('.',$parameter));
@@ -193,7 +279,7 @@ class Image extends Controller {
     imagedestroy($img);
   }
   
-  function check_day_value($val) {
+  private function check_day_value($val) {
     $return_value = true;
     if (strlen($val)==8) {
       $y = (int) substr($val,0,4);
@@ -206,7 +292,7 @@ class Image extends Controller {
     return array($return_value,substr($val,0,4),substr($val,4,2),substr($val,6,2));
   }
 
-  function getJsonDay($image,$date) {
+  private function getJsonDay($image,$date) {
   	switch (strlen($date)) {
   	  case 0:
   	  	  list($y,$m,$d) = explode('/',$image);
@@ -229,7 +315,7 @@ class Image extends Controller {
   	return $y.$m.$d;
   }
   
-  function getJsonTime($image,$date) {
+  private function getJsonTime($image,$date) {
   	switch (strlen($date)) {
   	  case 0:
   	  	  $time = substr($image,11,strlen($image)-16);
@@ -248,6 +334,7 @@ class Image extends Controller {
   }
   
   function json($st,$date) {
+  	$js_text = '{ }';
   	$images = $this->get_image_file_names($st,$date);
   	if (count($images)>0) {
   	  $js_text = '{';

@@ -37,7 +37,7 @@
   	                                 [ '2560x1440' , 'xga'   ],
   	                                 [ '3840x2160' , 'uhd'   ]);
   	                                 
-  function check_size($size_parameter) {
+  public function check_size($size_parameter) {
   	$size = '';
   	if (!empty($size_parameter)) {
   	  foreach ($this->valid_image_sizes as $val) {
@@ -49,31 +49,24 @@
   	return $size;
   }
   
-  function list_image_sizes() {
-  	$list = '';
-  	foreach ($this->valid_image_sizes as $val) {
-      $list .= $val[0].' ('.$val[1].'), ';
-    }
-    echo substr($list,0,-2);
-  }
-  	
   //
   // Hilfsfunktion, die alle Image-Dateinamen eines bestimmten Verzeichnisses 
   // liefert. Die Funktion pflegt dabei den Cache, der sich in jedem Verzeichnis
   // befindet.
   //
-  function get_image_file_names($st,$date='') {
+  public function get_image_file_names($st,$date='') {
   	
   	$images = array();
   	$image_stub_dir = _SHORT_DIR_.'/'.$st.'/01';
     $use_cache = false;
+  	
   	if (is_dir($image_stub_dir)) {
   	  $last_image_time = is_link($image_stub_dir.'/lastimage.jpg')?filemtime($image_stub_dir.'/lastimage.jpg'):0;
   	  // Zuerst mal schauen, ob es einen Cache gibtse 
   	  switch (strlen($date)) {
   	    case 0:
   	      $image_dir = $image_stub_dir;
-   	      $cache_time_offset = 0;
+   	      $cache_time_offset = 86400000;
    	      break;
   	    case 4:  // Bilder eines bestimmten Jahres
   	      $image_dir = $image_stub_dir.'/'.$date;
@@ -154,29 +147,33 @@
   	  return $images;
     }
   
-    function get_video_file_names($st) {
+    public function get_video_file_names($st) {
 
   	  $videos = array();
   	  $video_dir = _SHORT_DIR_.'/'.$st.'/01/movies';
   	  
-      $subdirs = array('all'=>'',
-                       'kw'=>'weeks',
-                       'month'=>'month');
+  	  if (is_dir($video_dir)) {
+  	  
+        $subdirs = array('all'=>'',
+                         'kw'=>'weeks',
+                         'month'=>'month');
       
-      foreach($subdirs as $name => $subdir) {
-      	$dir_name = $video_dir.($subdir==''?'':'/').$subdir;
-      	$dir = new DirectoryIterator($dir_name);
-      	$farr = array();
-      	foreach ($dir as $fileinfo) {
-      	  $filename = $fileinfo->getFilename();
-          if (!$fileinfo->isDot() && strpos($filename,'.mp4') && !strpos($filename,'768')) {
-            $farr[] = substr($filename,0,-4);
+        foreach($subdirs as $name => $subdir) {
+          $dir_name = $video_dir.($subdir==''?'':'/').$subdir;
+       
+          $dir = new DirectoryIterator($dir_name);
+          $farr = array();
+          foreach ($dir as $fileinfo) {
+            $filename = $fileinfo->getFilename();
+            if (!$fileinfo->isDot() && strpos($filename,'.mp4') && !strpos($filename,'768')) {
+              $farr[] = substr($filename,0,-4);
+            }
           }
+          sort($farr);
+          if (count($farr)>0) $videos[$name] = $farr;
+          unset($farr);
         }
-        sort($farr);
-        if (count($farr)>0) $videos[$name] = $farr;
-        unset($farr);
-      }
+  	  }
       return $videos;
     }
   	

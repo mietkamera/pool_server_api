@@ -2,8 +2,10 @@
 
   class Help extends Controller {
   	
-  	function __construct() {
+  	function __construct($module='help',$method='index') {
   	  parent::__construct();
+  	  $this->module = $module;
+  	  $this->method = $method;
   	}
   	
   	function index() {
@@ -13,18 +15,58 @@
   	  $this->view->render('footer');
   	}
   	
-  	public function load_topic($module,$operation) {
+  	// Ich nutze eine eigene Methode zum Rendern innerhalb des Controllers
+  	function render($name) {
+  	  require('views/'.$name.'.php');
+  	}
+  	
+  	public function render_module_help() {
   	  require 'models/help_model.php';
   	  $model = new Help_Model();
-  	  if (is_file('views/help/'.$module.'/'.$operation.'.php')) {
-  	  	$this->view->render('header');
-  	  	echo '<div class="container-fluid">'.
-  	  	     '<h1>HTTP-API</h1><h6><small class="text-muted">Version '._VERSION_.'</small></h6>';
-  	  	$this->render_breadcrumb($module,$operation);
-  	  	require 'views/help/'.$module.'/'.$operation.'.php';
-  	    $this->view->render('footer');
-  	    echo '</div>';
+  	  $this->view->render('header');
+  	  $this->view->render('help/header');
+  	  $this->render_breadcrumb($this->module);
+      if (is_file('views/'.$this->module.'/'.$this->method.'.php')) {
+  	  	require 'views/'.$this->module.'/'.$this->method.'.php';
   	  }
+  	  $this->view->render('help/footer');
+  	  $this->view->render('footer');
+  	}
+  	
+  	public function render_method_help() {
+  	  require 'models/help_model.php';
+  	  $model = new Help_Model();
+  	  $this->view->render('header');
+  	  $this->view->render('help/header');
+  	  $this->render_breadcrumb($this->module,$this->method);
+      if (is_file('views/help/'.$this->module.'/'.$this->method.'.php')) {
+  	  	require 'views/help/'.$this->module.'/'.$this->method.'.php';
+  	  }
+  	  $class_methods = get_class_methods($this->module);
+  	  if (count($class_methods>1)) {
+  	    echo '    <hr />'."\n".'    <div class="row">'."\n";
+  	    foreach ($class_methods as $method_name) {
+  	      switch ($method_name) {
+  	        case '__construct':
+  	        case 'index':
+  	        case 'help':
+  	        case 'loadModel':
+  	        case 'check_size':
+  	        case 'get_image_file_names':
+  	        case 'get_video_file_names':
+  	          break;
+  	  	    default:
+  	  	      if ($method_name!=$this->method) {
+  	  	        echo '      <div class="col-md-1"><a href="'._URL_STUB_.'/'.$this->module.'/'.$method_name.'/help'.'">'.$method_name.'</a></div>'."\n";
+  	  	      } else {
+  	  	        echo '      <div class="col-1">'.$method_name.'</div>'."\n";
+  	  	      }
+  	  	  }
+  	  	}
+  	    echo '    </div>'."\n";
+  	  }
+  	  $this->view->render('help/footer');
+  	  $this->view->render('footer');
   	}
   	
   	function help() {
@@ -36,5 +78,15 @@
   	       ($method==''?'':'<a href="'._URL_STUB_.'/'.$module.'/help">').$module.($method==''?'':'</a>').
   	       ($method==''?'':'/<span class="text-danger">'.$method.'</span>').'</h3>';
   	}
+ 	
+    function list_image_sizes() {
+  	  $list = '';
+  	  foreach ($this->valid_image_sizes as $val) {
+        $list .= $val[0].' ('.$val[1].'), ';
+      }
+      echo substr($list,0,-2);
+    }
+  	
+
   }
 ?>

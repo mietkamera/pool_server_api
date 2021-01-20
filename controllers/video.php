@@ -12,10 +12,8 @@ class Video extends Controller {
   
   function help() {
   	require('controllers/help.php');
-  	$this->view->help = new Help();
-  	$this->view->render('header');
-  	$this->view->render('video/help');
-  	$this->view->render('footer');
+  	$this->help = new Help('video','help');
+  	$this->help->render_module_help();
   }
   
   function player($st,$parameter) {
@@ -152,31 +150,68 @@ class Video extends Controller {
   }
   
   function mp4($st,$parameter) {
-  	$file = $this->get_stub($st,$parameter).'.mp4';
-    $this->stream_video($file,'mp4');  
+  	$filename = $this->get_stub($st,$parameter).'.mp4';
+  	if (!is_file($filename)) {
+  	  $filename = 'public/images/empty.mp4';
+  	}
+    $this->stream_video($filename,'mp4');  
   }
   
-  function webm($st,$parameter) {
-  	$file = $this->get_stub($st,$parameter).'.webm';
-    $this->stream_video($file,'webm');  
-  }
+//  function webm($st,$parameter) {
+//  	$file = $this->get_stub($st,$parameter).'.webm';
+//    $this->stream_video($file,'webm');  
+//  }
   
   function jpeg($st,$parameter) {
-  	$file = $this->get_stub($st,$parameter).'.jpg';
-  	if (!is_file($file)) {
-  	  header('HTTP/1.1 404 Not Found');
-  	  return false;
+  	$filename = $this->get_stub($st,$parameter).'.jpg';
+  	if (!is_file($filename)) {
+  	  $filename = 'public/images/empty.jpg';
   	}
   	header("Content-type: image/jpeg");
-  	readfile($file);
+  	readfile($filename);
   }
   
   function json($st) {
   	$videos = $this->get_video_file_names($st);
-  	
+  	if (count($videos)==0)
+  	  $videos = array("all"=>[], "kw" => []);
   	header('Content-type:application/json;charset=utf-8');
   	echo json_encode($videos);
   }
   
+  //
+  // Gibt ein Bild aus einer Datei als Downloadlink zurück
+  //
+  function download($st,$parameter='') {
+  	$filename = $this->get_stub($st,$parameter).'.mp4';
+    if (!is_file($filename)) {
+  	  header('HTTP/1.1 404 Not Found');
+  	  return false;
+    }
+
+    define('CHUNK_SIZE', 1024*1024); // Size (in bytes) of tiles chunk
+
+    $size = @getimagesize($filename);
+    if (! isset($size['mime'])) {
+      $size['mime'] = 'video/mp4';
+    }
+    $handle = @fopen($filename, "rb");
+    $buffer = '';
+    if ($size && $handle) {
+      header("Content-type: {$size['mime']}");
+      header("Content-Length: " . filesize($filename));
+      header("Content-Disposition: attachment; filename=".$st.'_'.$parameter.'.m4v');
+      header('Content-Transfer-Encoding: binary');
+      header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+      while (!feof($handle)) {
+        $buffer = fread($handle, CHUNK_SIZE);
+        echo $buffer;
+        ob_flush();
+        flush();
+      }
+      exit;
+    }
+  }
 }
 ?>

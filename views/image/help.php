@@ -1,6 +1,3 @@
-<div class="container-fluid">
-  <h1>HTTP-API</h1><h6><small class="text-muted">Version <?php echo _VERSION_;?></small></h6>
-  <?php $this->help->render_breadcrumb("image");?>
   <p class="lead">Das Modul image liefert Bilder oder Bildkataloge.</p>
   <h4>URL-Syntax</h4>
   <code><span class="text-success">https://mobil.mietkamera.de/http-api/image/</span><abbr title="Eine Methode des Moduls"><b><em>meth</em></b></abbr>/<abbr title="Shorttag der Kamera"><b><em>st</em></b></abbr>/<abbr title="Parameter der Methode"><b><em>par</em></b></abbr></code>
@@ -22,9 +19,10 @@
     <div class="col-sm-8"><p>Gibt das genau spezifizierte Bild zur&uuml;ck.</p></div>
   </div>
   <div class="row">
+    <div class="col-sm-1"><a href="<?php echo _URL_STUB_.'/image/thumb/help';?>">thumb</a></div>
+    <div class="col-sm-8"><p>Gibt das genau spezifizierte Bild als Thumbnail zur&uuml;ck.</p></div>
+  </div>
+  <div class="row">
     <div class="col-sm-1"><a href="<?php echo _URL_STUB_.'/image/json/help';?>">json</a></div>
     <div class="col-sm-8"><p>Bildkatalog einer Kamera in einem bestimmten Zeitabschnitt.</p></div>
   </div>
-  <hr>
-  <h5><a href="<?php echo _URL_STUB_.'/help';?>">HTTP-API Beschreibung</a></h5>
-</div>
