@@ -36,4 +36,4 @@
 <hr>
 <div class="row">
   <div class="col-1"><a>live</a></div>
-</div><h5><a href="<?php echo _URL_STUB_.'/help';?>">HTTP-API Beschreibung</a></h5>
+</div>

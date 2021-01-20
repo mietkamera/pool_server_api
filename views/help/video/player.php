@@ -36,11 +36,3 @@
   <p>Der Aufruf liefert eine Seite aus, die einen Videoplayer im Vollbildmodus ausgibt.
   Die Wiedergabe beginnt sofort, wird jedoch nicht wiederholt (loopen). Nach einer Stunde
   wird das Video erneut geladen und wiedergegeben.</p>
-  <hr>
-  <div class="row">
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/mp4/help';?>">mp4</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/webm/help';?>">webm</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/jpeg/help';?>">jpeg</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/json/help';?>">json</a></div>
-  	<div class="col-1"><a>player</a></div>
-  </div><h5><a href="<?php echo _URL_STUB_.'/help';?>">HTTP-API Beschreibung</a></h5>

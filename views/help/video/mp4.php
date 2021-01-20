@@ -7,7 +7,7 @@
   <p>Syntax: <code>size[.all|.kw.date]</code></p>
   <div class="row">
     <div class="col-sm-2 col-lg-1"><code>size</code></div>
-    <div class="col-sm-8 col-lg-6"><p>Dieser Wert dieses Parameters ist entweder hd (1920x1080) 
+    <div class="col-sm-8 col-lg-6"><p>Der Wert dieses Parameters ist entweder hd (1920x1080) 
     oder vgax (768x432). Beide Formate sind 16:9. Wenn der Wert ausgelassen wird, wird hd als 
     Standard angenommen.</p></div>
   </div>
@@ -27,11 +27,3 @@
   <p>Der Aufruf liefert die MP4-Ressource über die gesamte Aufnahmezeit in 768x432 Pixeln.</p>
   <code><b>https://mobil.mietkamera.de/http-api/video/mp4/</b>df34e2/hd.kw.201804</code>
   <p>Der Aufruf liefert die MP4-Ressource der vierten Kalenderwoche in 2018 in 1920x1080 Pixeln.</p>
-  <hr>
-  <div class="row">
-  	<div class="col-1"><a>mp4</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/webm/help';?>">webm</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/jpeg/help';?>">jpeg</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/json/help';?>">json</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/video/player/help';?>">player</a></div>
-  </div><h5><a href="<?php echo _URL_STUB_.'/help';?>">HTTP-API Beschreibung</a></h5>

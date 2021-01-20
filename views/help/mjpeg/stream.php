@@ -1,5 +1,4 @@
-<div class="container-fluid">
-  <h1><?php $this->render_breadcrumb("mjpeg","stream");?></h1>
+
   <p class="lead">Ausgabe eines MJPEG-kodierten Streams einer bestimmten Kamera.</p>
   <h5>URL</h5>
   <code><span class="text-success">https://mobil.mietkamera.de/http-api/mjpeg/stream/</span><abbr title="Shorttag der Kamera"><b><em>st</em></b></abbr>/<abbr title="Parameter der Methode"><b><em>par</em></b></abbr></code>
@@ -14,8 +13,9 @@
     <div class="col-sm-8 col-lg-6"><p>Dieser Parameter bezeichnet einen Datumsbereich. Die ersten vier Stellen bezeichnen 
   das Jahr, die folgenden zwei Stellen den Monat und die darauf folgenden zwei Stellen den
   Tag. L&auml;sst man den Tag weg, werden alle Bilder des Monats verwendet. L&auml;sst man
-  den Monat ebenfalls weg, werden alle Bilder des Jahres verwendet. Wird der Parameter 
-  komplett ausgelassen, liefert die URL alle Bilder der Kamera als Stream</p></div>
+  den Monat ebenfalls weg, werden alle Bilder des Jahres verwendet.</p>
+  <p>Implizite Datumsangaben sind ebenfalls m&ouml;glich. Folgende Werte werden unterst&uuml;tzt: <code>lastDay lastMonth lastYear</code></p>
+  <p>Wird der Parameter komplett ausgelassen, liefert die URL alle Bilder der Kamera als Stream</p></div>
   </div>
   <div class="row">
     <div class="col-sm-2 col-lg-1"><code>size</code></div>
@@ -26,5 +26,4 @@
  
   <hr><h5>Beispiel</h5>
   <code><b>https://mobil.mietkamera.de/http-api/mjpeg/stream/</b>df34e2/201805.512x384</code>
-  <hr><h5><a href="<?php echo _URL_STUB_.'/help';?>">HTTP-API Beschreibung</a></h5>
-</div>
+

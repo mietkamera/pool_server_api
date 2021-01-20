@@ -30,7 +30,6 @@
     var reload = <?php echo $this->reload*1000;?>;
     
     var m4vVideoFile = '<?php echo _URL_STUB_;?>/video/mp4/'+shortTag+'/'+resolution;
-    var webmVideoFile = '<?php echo _URL_STUB_;?>/video/webm/'+shortTag+'/'+resolution;
     var jpgPosterFile = '<?php echo _URL_STUB_;?>/video/jpeg/'+shortTag+'/'+resolution;
     
     var myPlayer = $("#jquery_jplayer_video_1");
@@ -40,7 +39,7 @@
       myPlayer.jPlayer("setMedia", {
                    title: "Zeitraffer",
                    m4v: m4vVideoFile+'.'+dummy,
-                   webmv: webmVideoFile+'.'+dummy,
+           /*        webmv: webmVideoFile+'.'+dummy, */
                    poster: jpgPosterFile+'.'+dummy
                  }).jPlayer("play");
       setTimeout(reloadVideo, reload); // run again 
@@ -54,7 +53,6 @@
                  var $this = $(this).jPlayer("setMedia", {
                    title: "Zeitraffer",
                    m4v: m4vVideoFile+'.'+dummy,
-                   webmv: webmVideoFile+'.'+dummy,
                    poster: jpgPosterFile+'.'+dummy
                  })<?php echo (!$this->start)?';':'.jPlayer("play");';?>
                  

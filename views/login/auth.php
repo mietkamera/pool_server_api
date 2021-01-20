@@ -1,6 +1,6 @@
 <div class="signin-form">
  <div class="container">
-  <form class="form-signin" method="post" id="login-form">
+  <form class="form-signin" method="post" id="loginForm">
    <img class="float-left" src="/http-api/public/images/favicon-32x32.png">
    <h2 class="form-signin-heading">&nbsp;mietkamera.de</h2><hr />
    <div id="info">
@@ -12,11 +12,11 @@
    <div class="form-group" id="form-s">
    	<p>Login f&uuml;r den Shorttag <b><?php echo $this->shorttag;?></b> :</p>
    	<!--<p>REFERER: <?php if (isset($this->redirect)) echo htmlentities($this->redirect);?></p>!-->
-    <input type="text" class="form-control" style="display:none;" name="shorttag" id="shorttag" value="<?php echo $this->shorttag;?>"/>
+    <input name="shorttag" id="shorttag" type="text" class="form-control" style="display:none;" value="<?php echo $this->shorttag;?>"/>
    </div>
    <div class="form-group" id="form-e" style="display:none;">
-    <input type="email" class="form-control" placeholder="Emailadresse" name="email" id="email" />
-    <span id="check-e"></span>
+    <input name="email" id="email" placeholder="Emailadresse" type="text" class="form-control" data-rule="{val}.length==0 || __isEmail({val})">
+    <div class="invalid-feedback">Geben Sie eine g&uuml;ltige Emailadresse ein.</div>
    </div>
    <div class="form-group">
     <input type="password" class="form-control" placeholder="Passwort" name="password" id="password" />
@@ -24,13 +24,13 @@
    <hr />
    <div class="form-group">
     <button type="submit" class="btn btn-default" name="btn-login" id="btn-login">
-      <span class="oi oi-account-login" title="account-login" aria-hidden="true"></span>&nbsp;Anmelden
+      <i class="fas fa-sign-in-alt"></i>&nbsp;</span>&nbsp;Anmelden
     </button>
    </div>
    <div class="form-group form-check" id="form-a">
    	 <?php if ($this->shorttag!='') { ?>
    	 <input type="checkbox" class="filled-in form-check-input" name="asadmin" id="asadmin" value="normal">
-     <label for="asadmin" class="disabled form-check-label">Als Admin anmelden</label>
+     <label for="asadmin" class="disabled form-check-label">Als Administrator anmelden</label>
      <?php } else { ?>
      <input type="checkbox" class="disabled filled-in form-check-input" name="asadmin" id="asadmin" value="admin" checked>
      <label for="asadmin" class="disabled form-check-label">Als Admin anmelden</label>
@@ -44,44 +44,10 @@
 
 $('document').ready(function() { 
 
-  normal_validation = {
-    rules: {
-      password: { 
-        required: true
-   	  }
-    },
-      
-    messages: {
-      password:{
-        required: "Bitte geben Sie Ihr Passwort ein"
-      }
-    },
-      
-    submitHandler: submitForm 
- 
-  };
-  
-  admin_validation = {
-    rules: {
-      password: { 
-        required: true
-   	  },
-   	  email: {
-        required: true,
-        email: true
-      }
-    },
-      
-    messages: {
-      password:{
-        required: "Bitte geben Sie Ihr Passwort ein"
-      },
-      email: "Geben Sie Ihre Emailadresse ein"
-    },
-      
-    submitHandler: submitForm 
- 
-  };
+  $("#loginForm").find("input").each(function () {
+    // Diese Funktion befindet sich in my-bootstrap4-validation.js
+    __attachValidationHandler($(this));
+  });
 
 <?php 
 if ($this->shorttag!='') { ?>
@@ -90,16 +56,12 @@ if ($this->shorttag!='') { ?>
   	  $("#form-e").show();
   	  $("#form-s").hide();
   	  this.value = "admin";
-  	  $("#login-form").validate(admin_validation); 
   	} else {
   	  $("#form-e").hide();
   	  $("#form-s").show();
   	  this.value = "normal";
-  	  $("#login-form").validate(normal_validation); 
   	}
   });
-  
-  $("#login-form").validate(normal_validation);  
   $("#password").focus();
 <?php 
 } else {
@@ -108,26 +70,34 @@ if ($this->shorttag!='') { ?>
   $("#form-s").hide();
   $("#form-a").hide();
   this.value = "admin";
-  $("#login-form").validate(admin_validation);
   $("#email").focus();
 <?php
 }
 ?>
-  /* login submit */
-  function submitForm() {
-  	var formData = $("#login-form").serialize();
-  	var httpRoot = '<?php echo $this->httpRoot;?>';
+
+  $("#loginForm").on("submit", function() {
+  	
+    $(this).find("input").each(function () {
+      __triggerValidationHandler($(this));
+    });
+    
+    var valid = ($(this).find("input.is-invalid").length === 0);
+    if (!valid) {
+      return false;
+    }
+    
+  	var formData = $("#loginForm").serialize();
   	$.ajax({
   		type : 'POST',
-  		url  : httpRoot+'ajax/login.php',
+  		url  : url_stub + '/ajax/login.php',
   		data : formData,
   		beforeSend: function() { 
   		  $("#error").fadeOut();
-  		  $("#btn-login").html('<span class="oi oi-transfer"></span> &nbsp; Sende Anfrage ...');
+  		  $("#btn-login").html('<i class="fas fa-exchange-alt"></i>&nbsp;Sende Anfrage ...');
   		},
   		success : function(response) { 
   		    if(response=="ok") {
-  			  $("#btn-login").html('<img src="'+httpRoot+'public/images/btn-ajax-loader.gif" /> &nbsp; Anmelden ...');
+  			  $("#btn-login").html('<img src="' + url_stub + '/public/images/btn-ajax-loader.gif" /> &nbsp; Anmelden ...');
   			  <?php if ($this->redirect=='') { ?>
   			  setTimeout('window.location.href = "<?php echo $_SERVER['HTTP_REFERER'];?>";',1000);
   			  <?php } else { ?>
@@ -135,14 +105,14 @@ if ($this->shorttag!='') { ?>
   			  <?php } ?>
   			} else {
   			  $("#error").fadeIn(1000, function(){      
-  			    $("#error").html('<div class="alert alert-danger"> <span class="oi oi-info"></span> &nbsp; '+response+' !</div>');
-  				$("#btn-login").html('<span class="oi oi-account-login"></span> &nbsp; Anmelden');
+  			    $("#error").html('<div class="alert alert-danger"><i class="fas fa-info"></i>&nbsp;'+ response + ' !</div>');
+  				$("#btn-login").html('<i class="fas fa-sign-in-alt"></i>&nbsp;Anmelden');
   			  });
   			}
   		}
   	});
   	return false;
-  }
-  /* login submit */
+  });
+ 
 }); /* $('document').ready */
 </script>

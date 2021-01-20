@@ -7,14 +7,7 @@
   <p>Der Shorttag ist ein sechstelliger Verweis auf das Kameraverzeichnis. Er muss angegeben werden.</p>
   <h5>par = Parameter</h5>
   <p>Syntax: <code>date</code></p>
-  <div class="row">
-    <div class="col-sm-2 col-lg-1"><code>date</code></div>
-    <div class="col-sm-8 col-lg-6"><p>Dieser Parameter bezeichnet einen Datumsbereich. Die ersten vier Stellen bezeichnen 
-  das Jahr, die folgenden zwei Stellen den Monat und die darauf folgenden zwei Stellen den
-  Tag. L&auml;sst man den Tag weg, werden alle Bilder des Monats verwendet. L&auml;sst man
-  den Monat ebenfalls weg, werden alle Bilder des Jahres verwendet. Wird der Parameter 
-  komplett ausgelassen, liefert die URL einen Katalog &uuml;ber alle Bilder der Kamera.</p></div>
-  </div>
+  <?php $this->render('help/div_parameter_date');?>
 </div>
   <h4>JSON-R&uuml;ckgabewert Beispiel</h4>
   <code>
@@ -33,11 +26,3 @@
   <code><b>https://mobil.mietkamera.de/http-api/image/json/</b>df34e2/201805</code>
   <p>Der Aufruf liefert eine JSON-Ressource, die f&uuml;r jeden Tag im Mai 2018 die Namen
   der Bilddateien liefert.</p>
-  <hr>
-  <div class="row">
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/image/first/help';?>">first</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/image/last/help';?>">last</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/image/live/help';?>">live</a></div>
-  	<div class="col-1"><a href="<?php echo _URL_STUB_.'/image/get/help';?>">get</a></div>
-  	<div class="col-1"><a>json</a></div>
-  </div><p></p><h5><a href="<?php echo _URL_STUB_.'/help';?>">HTTP-API Beschreibung</a></h5>

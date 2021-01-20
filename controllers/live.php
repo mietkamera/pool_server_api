@@ -12,10 +12,8 @@ class Live extends Controller {
   
   function help() {
   	require('controllers/help.php');
-  	$this->view->help = new Help();
-  	$this->view->render('header');
-  	$this->view->render('live/help');
-  	$this->view->render('footer');
+  	$this->help = new Help('live','help');
+  	$this->help->render_module_help();
   }
 
   function player($st,$parameter="") {
@@ -38,6 +36,8 @@ class Live extends Controller {
   	$this->view->render('live/player');
   	$this->view->render('footer');
   }
+  
+  
 }
 
 ?>
