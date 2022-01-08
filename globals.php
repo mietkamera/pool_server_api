@@ -9,9 +9,6 @@
 	define('_ERROR_', 1);
 	define('_INFO_', 2);
 	
-	define('_SECRET_KEY_','_These_ARE_my_Passwords_!');
-	define('_SECRET_INITIALIZATION_VECTOR_','6h4387fg');
-	
 	// In welchem Unterverzeichnis des Servers ist die 
 	// Anwendung installiert ?
 	define('_URL_STUB_','');

@@ -8,6 +8,7 @@ require 'libs/database.php';
 
 require 'dbconfig.php';
 require 'globals.php';
+require 'personal.php';
 
 $app = new Bootstrap;
 
