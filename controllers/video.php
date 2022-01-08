@@ -16,34 +16,6 @@ class Video extends Controller {
   	$this->help->render_module_help();
   }
   
-  function player($st,$parameter) {
-  	$param = array_map('trim',explode('.',$parameter));
-  	$quality = empty($param[0])?'hd':$param[0];
-  	switch ($quality) {
-  	  case "full":
-  	  case "uhd":
-  	  case "hd":
-  	  	$this->view->resolution ='hd';
-  	  	break;
-  	  case "hdready":
-  	  	$this->view->resolution ='hdready';
-  	  	break;
-  	  case "preview":
-  	  case "small":
-  	  case "vgax":
-  	  default:
-  	  	$this->view->resolution = 'vgax';
-  	}
-  	$this->view->shorttag = $st;
-  	$this->view->start = empty($param[1])?false:boolval($param[1]);
-    $this->view->loop = empty($param[2])?false:boolval($param[2]);
-    $this->view->reload = empty($param[3])?0:intval($param[3]);
-    
-  	$this->view->render('video/header');
-  	$this->view->render('video/player');
-  	$this->view->render('footer');
-  }
-  
   private function get_stub($st,$parameter) {
   	$param = array_map('trim',explode('.',$parameter));
   	$type = empty($param[0])?'hd':$param[0];
@@ -64,7 +36,7 @@ class Video extends Controller {
   	}
   	switch ($scope) {
   	  case 'kw':
-  	  	$subdir = 'weeks/';
+  	  	$subdir = 'week/';
   	  	$file_base_name = $date;
   	  	break;
   	  case "all":
@@ -73,7 +45,7 @@ class Video extends Controller {
   	  	$file_base_name = 'complete';
   	}
   	
-  	$file_stub_name = _SHORT_DIR_.'/'.$st.'/01/movies/'.$subdir.$file_base_name.$name_extension;
+  	$file_stub_name = _SHORT_DIR_.'/'.$st.'/movies/'.$subdir.$file_base_name.$name_extension;
   	return $file_stub_name;
   }
   
@@ -101,7 +73,6 @@ class Video extends Controller {
     header("Accept-Ranges: bytes 0-$length/$size");
 
     if (isset($_SERVER['HTTP_RANGE'])) {
-
       $c_start = $start;
       $c_end   = $end;
 
@@ -213,5 +184,21 @@ class Video extends Controller {
       exit;
     }
   }
+  
+  function player($st,$parameter) {
+  	$param = array_map('trim',explode('.',$parameter));
+  	$video = empty($param[0])?'hd:all':$param[0];
+  	$this->view->filestub = str_replace(':','.',$video);
+  	$this->view->shorttag = $st;
+  	$this->view->start = empty($param[1])?false:boolval($param[1]);
+    $this->view->loop = empty($param[2])?false:boolval($param[2]);
+    $this->view->reload = empty($param[3])?0:intval($param[3]);
+    
+  	$this->view->render('video/header');
+  	$this->view->render('video/player');
+  	$this->view->render('footer');
+  }
+  
+
 }
 ?>

@@ -9,56 +9,79 @@ class Login extends Controller {
   //
   // Ist der Shorttag gültig und wenn ja wird ein Passwort benötigt ?
   //
-  function valid($st) {
+  function need_validation($st) {
   	$dirname = _SHORT_DIR_.'/'.$st;
   	$filename = _SHORT_DIR_.'/'.$st.'/.password';
-  	$js_text = '{ "valid": '.($st!='' && is_dir($dirname)?'true':'false').",\n".
-  	           '  "required":'.(is_file($filename)?'true':'false').'}';
-  	header('Content-type:application/json;charset=utf-8');
-  	echo utf8_encode($js_text);
+  	if ($st!='' && is_dir($dirname)) {
+  	  if (is_file($filename)) {
+  	    $data = [ "returncode" => "200",
+                  "api_ver"    => _VERSION_,
+                  "message"    => "login required" 
+                ];
+  	  } else {
+  	    $data = [ "returncode" => "201",
+                  "api_ver"    => _VERSION_,
+                  "message"    => "no login required" 
+                ];
+  	  }
+  	} else {
+  	  $data = [ "returncode" => "501",
+                "api_ver"    => _VERSION_,
+                "message"    => "invalid shorttag" 
+              ];
+  	}
+  	header('Content-Type: application/json');
+  	echo json_encode($data);
   }
   
-  //
-  // Informationen über den Zustand der Sendeeinheit
-  //
-  function health($st) {
-  	$dirname = _SHORT_DIR_.'/'.$st;
-  	$success = 0;
-  	$text = 'keine Information.';
-  	$signal = '';
-  	if ($st!='' && is_dir($dirname)) {
-  	  require 'models/xml_model.php';
-  	  $xml = new XML_Model;
-  	  if (isset($xml->st[$st])) {
-  	    $ip = $xml->st[$st]['ip'];
-  	    $port = $xml->st[$st]['routerport'];
-  	    $output = array();
-        exec("/usr/bin/ping -c 1 $ip 2>&1",$output,$rs);
-        if ($rs==0) {
-          $success = 1;
-          $text = 'Sendeeinheit erreichbar.';
-          unset($output);
-          $output = array();
-          exec("/usr/bin/curl -1 -k -l --connect-timeout 30 --max-time 50 ".
-            'https://'.$ip.':'.$port.'/cgi-bin/luci 2>/dev/null '.
-            '| grep 3g | grep tr | cut -d \'>\' -f5 | cut -d \'<\' -f1',$output,$rs);
-          if ($rs==0) {
-            foreach($output as $txt)
-              $signal .= ($signal!=''?' ':'').$txt;
+  function login($st) {
+    if (isset($_POST)) {
+      if (isset($_POST['password'])) {
+        if ($st!='' && is_dir(_SHORT_DIR_.'/'.$st)) {
+          if (is_file(_SHORT_DIR_.'/'.$st.'/.password')) {
+          	$found = false;
+            $inhalt = explode("\n",file_get_contents(_SHORT_DIR_.'/'.$st.'/.password'));
+            foreach($inhalt as $zeile) {
+              list($typ,$pass) = explode(':',$zeile);
+              if ($password==$pass) {
+	            $found = true;
+                $_SESSION['session_'.$shorttag.'_type'] = $typ;
+	            $_SESSION['session_'.$shorttag] = rand();
+	            break;
+	          }
+	        }
+            $data = [ "returncode" => ($found?"200":"401"),
+                      "api_ver"    => _VERSION_,
+                      "message"    => "Login ".($found?'success':'failed')
+                    ];
           } else {
-            $signal = 'Kann Signal-Info nicht finden.';
+            $data = [ "returncode" => "200",
+                      "api_ver"    => _VERSION_,
+                      "message"    => "Login failed (invalid shorttag)"
+                    ];
           }
         } else {
-          $success = 0;
-          $text = 'Kann Sendeeinheit nicht erreichen.';
+          $data = [ "returncode" => "501",
+  	                "api_ver"    => _VERSION_,
+                    "message"    => "Login failed (invalid shorttag)"
+                  ];
         }
-  	  }
-  	}
-  	$js_text = '{ "result": "'.$success.'", "text": "'.$text.'", "signal": "'.$signal.'" }';
-  	header('Content-type:application/json;charset=utf-8');
-  	echo utf8_encode($js_text);
-  }
-
+      } else {
+  	  $data = [ "returncode" => "401",
+  	            "api_ver"    => _VERSION_,
+                "message"    => "Login failed (no credentials sent)"
+              ];
+      }
+    } else {
+  	  $data = [ "returncode" => "501",
+  	            "api_ver"    => _VERSION_,
+                "message"    => "Login failed (use POST to send credentials)"
+              ];
+    }
+  	header('Content-Type: application/json');
+  	echo json_encode($data);
+  } 
+  
   //
   // Rendert den Login-Dialog
   //

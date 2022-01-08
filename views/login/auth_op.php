@@ -1,7 +1,7 @@
 <div class="signin-form">
  <div class="container">
   <form class="form-signin" method="post" id="loginForm">
-   <img class="float-left" src="/http-api/public/images/favicon-32x32.png">
+   <img class="float-left" src="<?php echo _URL_STUB_?>/public/images/favicon-32x32.png">
    <h2 class="form-signin-heading">&nbsp;mietkamera.de</h2><hr />
    <div id="info">
     <!-- show info here -->

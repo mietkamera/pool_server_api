@@ -1,4 +1,6 @@
 <?php
+require_once 'libs/cls_apitype.php';
+require_once 'libs/cls_imageprofile.php';
 
 class Image extends Controller {
 	
@@ -25,7 +27,7 @@ class Image extends Controller {
       list($w,$h) = explode('x',$size);
       $must_resize = ($ow!=$w || $oh!=$h);
     }
-    
+    //error_log('$size='.$size);
   	header("Content-type: image/jpeg");
   	if ($must_resize) {
   	  $img =  imagecreatefromjpeg($filename);
@@ -35,7 +37,7 @@ class Image extends Controller {
       imagedestroy($img);
       imagedestroy($timg);
   	} else 
-    readfile($filename);
+      readfile($filename);
   }
   
   //
@@ -45,27 +47,26 @@ class Image extends Controller {
     $param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$param[0];
   	$size = $this->check_size(empty($param[1])?'':$param[1]);
-  	
   	$images = $this->get_image_file_names($st,$date);
   	
     if (count($images)>0) {
       switch (strlen($date)) {
         case 0:
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01';
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img';
           break;
         case 4:
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$date;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$date;
       	  break;
         case 6:
       	  $y = substr($date,0,4);
   	      $m = substr($date,4,2);
-          $image_dir =  _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m;
+          $image_dir =  _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m;
           break;
         case 8:
       	  $y = substr($date,0,4);
   	      $m = substr($date,4,2);
   	      $d = substr($date,6,2);
-          $image_dir =  _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d;
+          $image_dir =  _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m.'/'.$d;
           break;
         default:
       	  $image_dir = '';
@@ -89,30 +90,30 @@ class Image extends Controller {
   	$param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$param[0];
   	$size = $this->check_size(empty($param[1])?'':$param[1]);
-  	
-  	if ($date=='' && is_link(_SHORT_DIR_.'/'.$st.'/01/lastimage.jpg')) {
-  	  $images[] = readlink(_SHORT_DIR_.'/'.$st.'/01/lastimage.jpg')."\n";
+
+  	if ($date=='' && is_link(_SHORT_DIR_.'/'.$st.'/img/lastimage.jpg')) {
+  	  $images[] = readlink(_SHORT_DIR_.'/'.$st.'/img/lastimage.jpg')."\n";
   	} else
       $images = $this->get_image_file_names($st,$date);
 
     if (count($images)>0) {
       switch (strlen($date)) {
         case 0:
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01';
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img';
           break;
         case 4:
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$date;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$date;
           break;
         case 6:
       	  $y = substr($date,0,4);
   	      $m = substr($date,4,2);
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m;
           break;
         case 8:
       	  $y = substr($date,0,4);
   	      $m = substr($date,4,2);
   	      $d = substr($date,6,2);
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m.'/'.$d;
           break;
         default:
       	  $image_dir = '';
@@ -142,7 +143,7 @@ class Image extends Controller {
   	$m = substr($date,4,2);
   	$d = substr($date,6,2);
   	
-  	$filename = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+  	$filename = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
     if (!is_file($filename))
       $filename = 'public/images/empty.jpg';
     
@@ -160,7 +161,7 @@ class Image extends Controller {
   	$m = substr($date,4,2);
   	$d = substr($date,6,2);
   	
-  	$filename = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+  	$filename = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
     if (!is_file($filename)) {
       $filename = 'public/images/empty.jpg';     
     }
@@ -203,8 +204,8 @@ class Image extends Controller {
   	$m = substr($date,4,2);
   	$d = substr($date,6,2);
   	
-  	$filename = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
-  	$thumbname = _SHORT_DIR_.'/'.$st.'/01/'.$width.'/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+  	$filename = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
+  	$thumbname = _SHORT_DIR_.'/'.$st.'/img/'.$width.'/'.$y.'/'.$m.'/'.$d.'/'.substr($date,8).'.jpg';
     header("Content-type: image/jpeg");
     if (!is_file($filename)) {
       $w = 240;
@@ -213,7 +214,7 @@ class Image extends Controller {
       $img = imagecreatetruecolor($w,$h);
       $tcolor = imagecolorallocate($img, 255, 255, 255);
       $bcolor = imagecolorallocate($img, 0, 64, 128);
-      $font = 'DejaVuSans';
+      $font = './public/fonts/DejaVuSans.ttf';
 
       imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);
       imagettftext($img, ceil($w/32), 0, 30, 100, $tcolor, $font, $text);
@@ -224,7 +225,7 @@ class Image extends Controller {
       	$size=@getimagesize($filename);
         $breite = $size[0];
         $hoehe = $size[1];
-        $thumbdir = _SHORT_DIR_.'/'.$st.'/01/'.$width.'/'.$y.'/'.$m.'/'.$d;
+        $thumbdir = _SHORT_DIR_.'/'.$st.'/img/'.$width.'/'.$y.'/'.$m.'/'.$d;
         if (!is_dir($thumbdir)) mkdir($thumbdir, 0770, true);
         $height = intval($hoehe*$width/$breite);
         $myImage = @ImageCreateFromJPEG($filename);
@@ -238,21 +239,48 @@ class Image extends Controller {
   
   function live($st,$parameter="") {
   	$param = array_map('trim',explode('.',$parameter));
-  	$size = $this->check_size(empty($param[0])?'':$param[0]);
+  	$size = $this->check_size(empty($param[0])?'320x240':$param[0]);
 
-  	require 'models/xml_model.php';
-  	$xmldata = new XML_Model();
-    if ($st!='' && isset($xmldata->st[$st])) {
-      $webcam = $xmldata->st[$st];
-      if ($webcam['active']) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://'.$webcam['url'].$xmldata->api_image_path($webcam['api'],$size));
+  	// Ermittle die IP und die Zugangsdaten des Routers
+    if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
+      $active   = false;
+      $api_type = 'm12d';
+      $router_type = 'teltonika';
+      $protocol = 'https';
+      $port ='8444';
+      foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
+        $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
+        $var_value = trim(str_replace(array('"','\''),'',substr(strstr($row, ':'),1)));
+        switch ($var_name) {
+          case 'active':              $active = $var_value == 'true'; break;
+          case 'api_type':            $api_type = $var_value; break;
+          case 'router_type':         $router_type = $var_value; break;
+          case 'camera_url_protocol': $protocol = $var_value; break;
+          case 'camera_url_address':  $ip = $var_value; break;
+          case 'camera_url_port':     $port = $var_value; break;
+          case 'camera_url_secret':   $secret = $var_value; break;
+          default:
+        }
+      }
+    }
+    if(isset($ip)) {
+      if ($active) {
+      	switch ($router_type) {
+      	  case 'teltonika':
+      	    $image_profile = ImageProfile::best_fitting_profile($api_type,$size);
+            $url = $protocol.'://'.$ip.':'.$port.APIType::get_image_url($api_type,$image_profile);
+            break;
+          case 'virtual':
+          default:
+            $url = $protocol.'://'.$ip;
+      	}
+      	$ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-        curl_setopt($ch, CURLOPT_USERPWD, $webcam['secret']);
+        curl_setopt($ch, CURLOPT_USERPWD, $secret);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
     
         $result = curl_exec($ch);
@@ -260,6 +288,8 @@ class Image extends Controller {
         curl_close($ch);
         if ($rescode=='200') {
           header("Content-Type: image/jpeg");
+          list($w,$h) = explode('x',$size);
+          
           echo $result;
           return;
         } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht erreichbar.';
@@ -271,7 +301,7 @@ class Image extends Controller {
     $img = imagecreatetruecolor($w,$h);
     $tcolor = imagecolorallocate($img, 255, 255, 255);
     $bcolor = imagecolorallocate($img, 0, 64, 128);
-    $font = 'DejaVuSans';
+    $font = './public/fonts/DejaVuSans.ttf';
 
     imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);
     imagettftext($img, ceil($w/32), 0, 30, 100, $tcolor, $font, $text);
@@ -333,40 +363,43 @@ class Image extends Controller {
   	return $time;
   }
   
-  function json($st,$date) {
+  function json($st,$parameter='') {
+  	$param = array_map('trim',explode('.',$parameter));
+  	$date = empty($param[0])?'':$param[0];
   	$js_text = '{ }';
   	$images = $this->get_image_file_names($st,$date);
   	if (count($images)>0) {
-  	  $js_text = '{';
+  	  $js_text = "{\n";
   	  $hourList = '';
-  	  $thisDay = $this->getJsonDay($images[0],$date);
+  	  $lastDay = $this->getJsonDay($images[0],$date);
   	  $arr_length = count($images);
+  	  //error_log(print_r($images[count($images)-1],true));
       $i = 1;
       foreach($images as $key => $filename) {
-        $nextDay = $this->getJsonDay($filename,$date);
+        $thisDay = $this->getJsonDay($filename,$date);
         $minute = $this->getJsonTime($filename,$date);
-        if ($nextDay == $thisDay && $key < ($arr_length-1)) {
-          $hourList .= ($hourList == ''?'':',').'"'.$minute.'"';
-        } else {
-          if ($key == ($arr_length-1)) {
-            if ($nextDay == $thisDay)
-              $hourList .= ($hourList == ''?'':',').'"'.$minute.'"';
-             else {
-              $js_text .= '"'.$i.'": { day: "'.$thisDay.'", files: ['.$hourList.'] }'."\n";
-              $i++;
-              $thisDay = $nextDay;
-              $hourList = '"'.$minute.'"';
-            }
+        if ($thisDay == $lastDay) {
+          if ($key < ($arr_length-1)) {
+            $hourList .= ($hourList == ''?'':',').'"'.$minute.'"';
+          } else {
+          	$hourList .= ($hourList == ''?'':',').'"'.$minute.'"';
+            $js_text .= '"'.$i.'": { "day": "'.$lastDay.'", "files": ['.$hourList.'] }'."\n";
           }
-          $js_text .= '"'.$i.'": { "day": "'.$thisDay.'", "files": ['.$hourList.'] }'.
-              ($key==($arr_length-1)?'':',')."\n";
-          $i++;
-          $thisDay = $nextDay;
+        } else {
+          $js_text .= '"'.$i.'": { "day": "'.$lastDay.'", "files": ['.$hourList.'] }';
           $hourList = '"'.$minute.'"';
+          $i++;
+          if ($key < ($arr_length-1)) {
+          	$js_text .= ','."\n";
+          } else {
+          	$js_text .= ','."\n";
+            $js_text .= '"'.$i.'": { "day": "'.$lastDay.'", "files": ['.$hourList.'] }'."\n";
+          }
+
         }
+        $lastDay = $thisDay;
       }
       $js_text .= '}';
-      //$js_text .= 'allDaysPictures.length = '.($i-1).';'."\n";
   	}
   	
   	header('Content-type:application/json;charset=utf-8');

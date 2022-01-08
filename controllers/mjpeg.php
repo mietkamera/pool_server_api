@@ -23,19 +23,10 @@ class Mjpeg extends Controller {
   function stream($st,$parameter) {
   	$param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$param[0];
-  	$size = empty($param[1])?'2048x1536':$param[1];
-  	switch ($size) {
-  	  case '1280x720':
-  	  case '512x384':
-  	  case '768x576':
-  	  case '1024x768':
-  	  case '2048x1536':
-  	    break;
-  	  default:
-  	  	$size = '2048x1536';
-  	}
+  	$size = $this->check_size(empty($param[1])?'':$param[1]);
+  	list($w,$h) = explode('x',$size);
   	
-  	$image_dir = _SHORT_DIR_.'/'.$st.'/01';
+  	$image_dir = _SHORT_DIR_.'/'.$st.'/img';
   	switch($date) {
   	  case 'lastDay':
   	    if (is_link($image_dir.'/lastimage.jpg')) {
@@ -60,26 +51,25 @@ class Mjpeg extends Controller {
   	  	break;
   	}
   	
-  	list($w,$h) = explode('x',$size);
     $images = $this->get_image_file_names($st,$date);
     if (sizeof($images)>0) {
       switch (strlen($date)) {
         case 0:
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01';
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img';
           break;
         case 4:
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$date;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$date;
           break;
         case 6:
       	  $y = substr($date,0,4);
   	      $m = substr($date,4,2);
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m;
           break;
         case 8:
       	  $y = substr($date,0,4);
   	      $m = substr($date,4,2);
   	      $d = substr($date,6,2);
-          $image_dir = _SHORT_DIR_.'/'.$st.'/01/'.$y.'/'.$m.'/'.$d;
+          $image_dir = _SHORT_DIR_.'/'.$st.'/img/'.$y.'/'.$m.'/'.$d;
           break;
         default:
       	  $image_dir = '';

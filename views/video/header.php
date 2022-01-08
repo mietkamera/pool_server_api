@@ -15,7 +15,6 @@
   <link rel="stylesheet" type="text/css" href="<?php echo _URL_STUB_;?>/public/jplayer/skin/flat.video/css/flat.video.css"/>
   <script type="text/javascript" src="<?php echo _URL_STUB_;?>/public/jplayer/jquery.jplayer.js"></script>
   <link href="<?php echo _URL_STUB_;?>/public/css/website.css" rel="stylesheet">
-  <link href="<?php echo _URL_STUB_;?>/public/css/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
   <script type="text/javascript" src="<?php echo _URL_STUB_;?>/public/jplayer/player.js"></script>
 </head>
 <body>

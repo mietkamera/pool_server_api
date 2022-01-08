@@ -2,8 +2,8 @@
  
  // Database Stuff
  $db_host = "localhost";
- $db_name = "mietkamera";
+ $db_name = "shorttags";
  $db_user = "root";
- $db_pass = "MYPASS";
+ $db_pass = "45azvewi";
 
 ?>

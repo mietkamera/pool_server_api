@@ -17,6 +17,46 @@
   	  }
   	}
   	
+    protected function encrypt_decrypt($string, $action = 'encrypt') {
+      $encrypt_method = "AES-256-CBC";
+      $secret_key = _SECRET_KEY_;                     // user define private key
+      $secret_iv = _SECRET_INITIALIZATION_VECTOR_;    // user define initialization vector
+      $key = hash('sha256', $secret_key);
+      $iv = substr(hash('sha256', $secret_iv), 0, 16); // sha256 is hash_hmac_algo
+      if ($action == 'encrypt') {
+        $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+        $output = base64_encode($output);
+      } else if ($action == 'decrypt') {
+        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+      }
+      return $output;
+    }
+
+    protected function getShorttagDataFromFile($st) {
+      $data = array();
+      if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
+        foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
+          // Im Value können durchaus Doppelpunkte auftauchen
+          $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
+          $var_value = trim(str_replace(array('"','\''),'',substr(strstr($row, ':'),1)));
+          if ($var_name == 'api_operator_secret' || $var_name =='api_user_secret')
+            $var_value = $this->encrypt_decrypt($var_value,'decrypt');
+          switch (gettype($var_value)) {
+            case "integer":
+              $data[$var_name] = intval($var_value);
+              break;
+            case "boolean":
+              $data[$var_name] = $var_value=='true'?1:0;
+              break;
+            default:
+              $data[$var_name] = $var_value;
+          }
+        }
+      }
+      return $data;
+    }
+
+  	
   //
   // hilfsfunktion, die Bildgrößen aus übergebenen Parametern bestimmt
   // Diese Funktion wird in vielen Methoden abgeleiteter Objekte benötigt 
@@ -57,7 +97,7 @@
   public function get_image_file_names($st,$date='') {
   	
   	$images = array();
-  	$image_stub_dir = _SHORT_DIR_.'/'.$st.'/01';
+  	$image_stub_dir = _SHORT_DIR_.'/'.$st.'/img';
     $use_cache = false;
   	
   	if (is_dir($image_stub_dir)) {
@@ -150,12 +190,12 @@
     public function get_video_file_names($st) {
 
   	  $videos = array();
-  	  $video_dir = _SHORT_DIR_.'/'.$st.'/01/movies';
+  	  $video_dir = _SHORT_DIR_.'/'.$st.'/movies';
   	  
   	  if (is_dir($video_dir)) {
   	  
         $subdirs = array('all'=>'',
-                         'kw'=>'weeks',
+                         'kw'=>'week',
                          'month'=>'month');
       
         foreach($subdirs as $name => $subdir) {

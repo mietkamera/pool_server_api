@@ -59,7 +59,7 @@
       var resolution = '<?php echo $this->resolution;?>';
       var autoplay = <?php echo $this->autoplay?'true':'false';?>;
       
-      var imgUrl = 'https://mobil.mietkamera.de/http-api/image/live/'+shortTag+'/'+resolution;
+      var imgUrl = 'https://<?php echo $_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/';?>' + shortTag + '/' + resolution;
 
       var downloadBuffer = $('<img>');
       var imgCountDown = null;

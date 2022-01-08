@@ -3,8 +3,22 @@
   	
   	function __construct() {
   	  session_start();
-	  $url = explode('/',rtrim((isset($_GET['url'])?$_GET['url']:null),'/'));
+  	  $this->db = new Database;
       
+      // von welchen URLs aus kann man ohne Passwort Daten abrufen 
+      $validip = false;
+      $iprecord = $this->db->query('SELECT path FROM valid_ips WHERE ip="'.$_SERVER['REMOTE_ADDR'].'"');
+      if (isset($iprecord)) {
+      	foreach($iprecord as $record) {
+      	  if (strpos($_GET['url'],$record['path']) !== false) {
+      	    $validip = true;
+      	    break;
+      	  }
+      	}
+      }
+      
+	  $url = explode('/',rtrim((isset($_GET['url'])?$_GET['url']:null),'/'));
+
       if (empty($url[0])) {
         require 'controllers/index.php';
         $controller = new Index();
@@ -35,11 +49,11 @@
       $controller->loadModel($url[0]);
       
       $module    = $url[0];
-      $method = empty($url[1])?'help':$url[1];
+      $method    = empty($url[1])?'help':$url[1];
       $shorttag  = empty($url[2])?'':$url[2];
-      $parameter = empty($url[3])?'':$url[3];
-      
-      if ($module!='login') {
+      $parameter = !isset($url[3])?'':$url[3];
+
+      if (!$validip && $module!='login') {
         if ($shorttag!='' && is_file(_SHORT_DIR_.'/'.$shorttag.'/.password') && 
                  (strpos(file_get_contents(_SHORT_DIR_.'/'.$shorttag.'/.password'),'user:') !== false) &&
                  !(isset($_SESSION['session_'.$shorttag]) || isset($_SESSION['session_admin'])) ) {
@@ -50,7 +64,7 @@
       	  $controller->auth($shorttag,$_GET['url']);
       	  return false;
         }
-      } else $parameter = '';
+      } else if (!$validip) $parameter = '';
       
       if ($shorttag=='help' || ($method!='help' && $shorttag=='')) {
       	require 'controllers/help.php';
@@ -58,9 +72,16 @@
       	$controller->render_method_help();
       	return false;
       }
-      
-      $controller->$method($shorttag,$parameter);
 
+      if (method_exists($controller,$method))
+        $controller->$method($shorttag,$parameter);
+       else {
+       	require 'controllers/error.php';
+      	$controller = new MyError();
+      	$controller->index();
+      	return false;
+      }
+        
   	}
   }
 ?>

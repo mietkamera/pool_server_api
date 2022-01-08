@@ -37,7 +37,7 @@
         break;
       case 'normal':
       default:
-        $inhalt = explode("\n",file_get_contents('../'._SHORT_DIR_.'/'.$shorttag.'/.password'));
+        $inhalt = explode("\n",file_get_contents(_SHORT_DIR_.'/'.$shorttag.'/.password'));
         foreach($inhalt as $zeile) {
           list($typ,$pass) = explode(':',$zeile);
           if ($password==$pass) {

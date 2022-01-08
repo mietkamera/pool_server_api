@@ -18,8 +18,8 @@ class Live extends Controller {
 
   function player($st,$parameter="") {
   	$param = array_map('trim',explode('.',$parameter));
-  	$size = $this->check_size(empty($param[0])?'':$param[0]);
-  	$this->view->resolution = $size==''?'800x600':$size;
+  	$size = $this->check_size(isset($param[0])?$param[0]:'');
+  	$this->view->resolution = $size!==''?$size:'800x600';
   	switch(empty($param[1])?'1':$param[1]) {
   	  case '0':
   	  case 'false':

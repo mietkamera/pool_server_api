@@ -40,10 +40,12 @@
   	  $this->view->render('help/header');
   	  $this->render_breadcrumb($this->module,$this->method);
       if (is_file('views/help/'.$this->module.'/'.$this->method.'.php')) {
+      	$this->view->module = $this->module;
+      	$this->view->method = $this->method;
   	  	require 'views/help/'.$this->module.'/'.$this->method.'.php';
   	  }
   	  $class_methods = get_class_methods($this->module);
-  	  if (count($class_methods>1)) {
+  	  if (is_array($class_methods) && count($class_methods)>1) {
   	    echo '    <hr />'."\n".'    <div class="row">'."\n";
   	    foreach ($class_methods as $method_name) {
   	      switch ($method_name) {
@@ -52,14 +54,16 @@
   	        case 'help':
   	        case 'loadModel':
   	        case 'check_size':
+  	        case 'encrypt_decrypt':
+  	        case 'getShorttagDataFromFile':
   	        case 'get_image_file_names':
   	        case 'get_video_file_names':
   	          break;
   	  	    default:
   	  	      if ($method_name!=$this->method) {
-  	  	        echo '      <div class="col-md-1"><a href="'._URL_STUB_.'/'.$this->module.'/'.$method_name.'/help'.'">'.$method_name.'</a></div>'."\n";
+  	  	        echo '      <div class="col-md-3"><a href="'._URL_STUB_.'/'.$this->module.'/'.$method_name.'/help'.'">'.$method_name.'</a></div>'."\n";
   	  	      } else {
-  	  	        echo '      <div class="col-1">'.$method_name.'</div>'."\n";
+  	  	        echo '      <div class="col-3">'.$method_name.'</div>'."\n";
   	  	      }
   	  	  }
   	  	}

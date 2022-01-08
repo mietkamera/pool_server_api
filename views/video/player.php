@@ -24,13 +24,13 @@
   
   <script type="text/javascript">
     var shortTag = '<?php echo $this->shorttag;?>';
-    var resolution = '<?php echo $this->resolution;?>';
+    var filestub = '<?php echo $this->filestub;?>';
     var start = <?php echo $this->start?'true':'false';?>;
     var loop = <?php echo $this->loop?'true':'false';?>;
     var reload = <?php echo $this->reload*1000;?>;
     
-    var m4vVideoFile = '<?php echo _URL_STUB_;?>/video/mp4/'+shortTag+'/'+resolution;
-    var jpgPosterFile = '<?php echo _URL_STUB_;?>/video/jpeg/'+shortTag+'/'+resolution;
+    var m4vVideoFile = '<?php echo _URL_STUB_;?>/video/mp4/'+shortTag+'/'+filestub;
+    var jpgPosterFile = '<?php echo _URL_STUB_;?>/video/jpeg/'+shortTag+'/'+filestub;
     
     var myPlayer = $("#jquery_jplayer_video_1");
     
