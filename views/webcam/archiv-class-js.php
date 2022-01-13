@@ -80,9 +80,12 @@ class Pictures {
 
   // What to do, when this.timeControl changes
   timeControlInputChange (day, time) {
-    this.setStatusImageString();
     this.timeStr.html(this.getTimeString(day,time));
-    this.picture.attr('src',this.getImageThumbURI(day, time));
+    this.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-white"></div>');
+    var obj = this;
+    this.picture
+                .on('load', function() { obj.enableControls(day,time); obj.setStatusImageString(); })
+                .attr('src',this.getImageThumbURI(day, time));
   }
 
   enableControls (day, time) {
@@ -97,7 +100,7 @@ class Pictures {
     setTimeout( function() {
         obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-white"></div>');
         obj.picture
-                   .on('load', function() { obj.enableControls(day,time) })
+                   .on('load', function() { obj.enableControls(day,time); obj.setStatusImageString(); })
   	               .attr('src',obj.getImageURI( day, time ));
         obj.timeStr.html(obj.getTimeString(day,time));
         obj.pictureBtnDownload.attr('href', obj.apiUrl + '/image/download/' + obj.st + '/' + obj.getImageURIParameter(day,time));
@@ -354,7 +357,7 @@ class Pictures {
               var updated = obj.refreshData(data);
             }
           });
-          $.getJSON(this.apiUrl + '/status/information/' + this.st, function(data) {
+          $.getJSON(obj.apiUrl + '/status/information/' + obj.st, function(data) {
   	        if (data.payload.information.aktiv)
   	          obj.onlineStatus.html('<span class="btn btn-xs btn-' + data.payload.image.color + '">' + data.payload.image.short + '</span>');
   	         else
