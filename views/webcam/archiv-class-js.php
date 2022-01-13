@@ -48,7 +48,7 @@ class Pictures {
       	  
       this.dayRightControl.on('click', function() { obj.daySlide(+1, obj.dayRightControl) });
  
-      this.timeControl.on('input change', function() { obj.timeControlInputChange(
+      this.timeControl.on('input', function() { obj.timeControlInputChange(
       	  obj.dayControl.val(), obj.timeControl.val()) });
       	  
       this.timeControl.on('mouseup touchend keyup', function () { obj.timeControlMouseupTouchend(
@@ -64,7 +64,11 @@ class Pictures {
   }
   
   dayControlInputChange (day) {
-    this.pictureDay.attr('src',this.getDayThumbURI( day ));
+    var obj = this;
+    $('<img>').on('load', function() {
+    	                    obj.pictureDay.attr('src', $(this).attr('src'))
+                          })
+              .attr('src', this.getDayThumbURI(day));
     this.dayStr.html(this.getDayString(day));
   }
   
@@ -81,30 +85,35 @@ class Pictures {
   // What to do, when this.timeControl changes
   timeControlInputChange (day, time) {
     this.timeStr.html(this.getTimeString(day,time));
-    this.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-white"></div>');
     var obj = this;
-    this.picture
-                .on('load', function() { obj.enableControls(day,time); obj.setStatusImageString(); })
-                .attr('src',this.getImageThumbURI(day, time));
+    setTimeout( function() {
+                   $('<img>').on('load', function() {
+                                             obj.picture.attr('src', $(this).attr('src'))
+                                          })
+                             .attr('src', obj.getImageThumbURI(day, time));
+    });
   }
 
   enableControls (day, time) {
     this.loadingSpinner.html('');
     this.timeAllController.prop('disabled', false);
     this.timeLastControl.prop('disabled', parseInt(day)===(this.numDays()-1) && parseInt(time)===(this.numImages(day)-1));
+    this.setStatusImageString();
   }
   
   timeControlMouseupTouchend (day, time) {
-    this.timeAllController.prop('disabled', true);
+    $.each(this.timeAllController, function() { $(this).prop('disabled', true) });
+    this.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-white"></div>');
+    this.timeStr.html(this.getTimeString(day,time));
+    this.pictureBtnDownload.attr('href', this.apiUrl + '/image/download/' + this.st + '/' + this.getImageURIParameter(day,time));
     var obj = this;
-    setTimeout( function() {
-        obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-white"></div>');
-        obj.picture
-                   .on('load', function() { obj.enableControls(day,time); obj.setStatusImageString(); })
-  	               .attr('src',obj.getImageURI( day, time ));
-        obj.timeStr.html(obj.getTimeString(day,time));
-        obj.pictureBtnDownload.attr('href', obj.apiUrl + '/image/download/' + obj.st + '/' + obj.getImageURIParameter(day,time));
-    });        
+    $('<img>').on('load', function() {
+                    obj.loadingSpinner.html('');
+                    obj.enableControls (day, time);
+                    obj.picture.attr('src', $(this).attr('src'));
+                })
+            .attr('src', this.getImageURI( day, time ))
+     
   }
   
   dayChangeBtnClick (day) {
@@ -225,11 +234,11 @@ class Pictures {
           this.timeControl.val(time);
           this.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
           var obj = this;
-          this.picture
-  	              .on('load', function() { obj.loadingSpinner.html(''); 
-  	              	                       obj.timeStr.html(obj.getTimeString(day,time));
-  	              })
-                  .attr('src', this.getImageURI(day,time));
+          $('<img>').on('load', function() {
+                                   obj.loadingSpinner.html('')
+                                   obj.picture.attr('src', $(this).attr('src'))
+                                })
+                    .attr('src', this.getImageURI(day,time))
           this.pictureBtnDownload.attr('href', this.apiUrl + '/image/download/' + this.st + '/' + this.getImageURIParameter(day,time));
           this.setStatusDayString();
           this.setStatusImageString();
