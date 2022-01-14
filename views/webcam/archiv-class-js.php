@@ -240,6 +240,7 @@ class Pictures {
                                 })
                     .attr('src', this.getImageURI(day,time))
           this.pictureBtnDownload.attr('href', this.apiUrl + '/image/download/' + this.st + '/' + this.getImageURIParameter(day,time));
+          this.timeStr.html(this.getTimeString(day,time));
           this.setStatusDayString();
           this.setStatusImageString();
   	      this.curtain.addClass('d-none');

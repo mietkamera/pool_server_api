@@ -15,10 +15,10 @@
                 <input type="range" class="time-range change-time-controller custom-range mt-1 mr-2 d-none d-sm-inline-block">
                 <button class="time-right-btn change-time-controller btn btn-sm btn-outline-secondary rounded mr-2"><i class="fas fa-caret-right"></i></button>
                 <button class="time-last-btn change-time-controller btn btn-sm btn-outline-danger rounded mr-2"><i class="fas fa-angle-double-right"></i></button>
-                <button class="dayStr btn btn-sm btn-outline-primary rounded mr-2"
+                <button class="dayStr btn btn-sm btn-outline-primary rounded mr-2 font-weight-bold"
                         data-toggle="modal" 
                         data-target="#modal_archiv_<?php echo $this->shorttag;?>">00.00.0000</button>
-                <div class="timeStr btn btn-sm btn-outline-secondary rounded">00:00</div>
+                <div class="timeStr btn btn-sm btn-outline-secondary rounded font-weight-bold">00:00</div>
               </div>
             </div>
           </div>

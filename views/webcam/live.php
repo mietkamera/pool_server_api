@@ -38,8 +38,8 @@
           	</div>
           	<div class="col-3 col-sm-2 col-lg-4 ml-0 pl-0">
               <div class="btn-group btn-block">
-                <div class="dayStr d-none d-lg-inline-block mr-2 btn btn-sm btn-outline-secondary rounded mr-2">00.00.0000</div>
-                <div class="timeStr ml-0 btn btn-sm btn-outline-secondary rounded">00:00</div>
+                <div class="dayStr d-none d-lg-inline-block mr-2 btn btn-sm btn-outline-secondary rounded mr-2 font-weight-bold">00.00.0000</div>
+                <div class="timeStr ml-0 btn btn-sm btn-outline-secondary rounded font-weight-bold">00:00</div>
               </div>
           	</div>
           </div>

@@ -19,10 +19,14 @@
           <div class="col-8">
           	<div class="row m-0 p-0">
           	  <div class="col m-0 p-0">
-          	    <input class="status-text form-control form-control-sm" type="text" disabled value="...">
+          	    <div class="input-group input-group-sm">
+          	      <button class="btn btn-sm" type="button" data-toggle="collapse" data-target="#<?php echo $this->shorttag;?>Chart" aria-expanded="false" aria-controls="<?php echo $this->shorttag;?>Chart">
+                     <i class="fas fa-chevron-down"></i></button> 
+                  <input class="status-text form-control form-control-sm" type="text" disabled value="...">
+          	    </div>
           	  </div>
           	</div>
-          	<div class="row m-0 p-0">
+          	<div class="row m-0 p-0 collapse" id="<?php echo $this->shorttag;?>Chart">
           	  <div class="col m-0 p-0">
                 <img class="status-chart img img-fluid h-75 d-none"/>
           	  </div>

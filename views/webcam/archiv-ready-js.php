@@ -2,14 +2,18 @@
 
 $('document').ready(function() {
 
-  let myLocationArray = window.location.pathname.split('/'); 
-  let mySt = myLocationArray[3];
+  //let myLocationArray = window.location.pathname.split('/'); 
+  //let mySt = myLocationArray[3];
+  //let hostName = window.location.hostname;
+
+  let mySt = "<?php echo $this->shorttag;?>";
+  let hostName = "<?php echo $_SERVER['SERVER_NAME'];?>";
   
-  let allPictures = new Pictures(mySt, 'ca_' + mySt, 'https://' + window.location.hostname + url_stub);
+  let allPictures = new Pictures(mySt, 'ca_' + mySt, 'https://' + hostName + url_stub);
   allPictures.initStage();
   
   <?php if ($this->print_information==1) { ?>
-  let info = new Information(mySt, 'ci_' + mySt, 'https://' + window.location.hostname + url_stub);
+  let info = new Information(mySt, 'ci_' + mySt, 'https://' + hostName + url_stub);
   info.initPanel();
   <?php } ?>
   

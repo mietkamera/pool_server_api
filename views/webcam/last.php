@@ -29,7 +29,7 @@
              class="picture img img-fluid auto-scale"
              data-toggle="collapse"
              data-target=".controller"
-             src="<?php echo _URL_STUB_.'/image/last/'.$this->shorttag.'/';?>">
+             >
 
       </div>
       

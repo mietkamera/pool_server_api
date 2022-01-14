@@ -61,11 +61,12 @@ class Last {
                 obj.dayStr.html(obj.getDayString());
   	            obj.timeStr.html(obj.getTimeString());
   	            obj.pictureBtnDownload.attr('href', obj.getImageDownloadURI());
-                setTimeout( function() {
-                  obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
-                  obj.picture
-                       .attr('src',obj.getImageURI());
-                });
+                obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
+                $("<img>").on('load', function() {
+                                        obj.loadingSpinner.html('');
+                                        obj.picture.attr('src', $(this).attr('src'))
+                                      })
+                          .attr('src',obj.getImageURI());
               }
             }
           });
@@ -88,6 +89,11 @@ class Last {
   	    obj.dayStr.html(obj.getDayString());
   	    obj.timeStr.html(obj.getTimeString());
   	    obj.pictureBtnDownload.attr('href', obj.getImageDownloadURI());
+        $("<img>").on('load', function() {
+                                        obj.loadingSpinner.html('');
+                                        obj.picture.attr('src', $(this).attr('src'))
+                                      })
+                  .attr('src',obj.getImageURI());
       }
   	});
   	$.getJSON(this.apiUrl + '/status/information/' + this.st, function(data) {

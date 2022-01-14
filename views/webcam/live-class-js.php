@@ -125,12 +125,13 @@ class Live {
                       obj.time = time;
                       obj.dayStr.html(obj.getDayString());
   	                  obj.timeStr.html(obj.getTimeString());
-                      setTimeout( function() {
-                        obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
-                        obj.picture
-                             .on('load',obj.loadingSpinner.html(''))
-                             .attr('src',obj.getImageURI());
-                      });
+                      obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
+                      $("<img>").one('load', function() {
+                                                 obj.loadingSpinner.html('');
+                                                 obj.picture.attr('src', $(this).attr('src'));
+                                               })
+                                .attr('src', obj.getImageURI());
+                        
                     } 
                   }
                 });
