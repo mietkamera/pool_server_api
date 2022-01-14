@@ -146,13 +146,20 @@ class Live {
   }
 
   initStage() {
+    this.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
+  	this.startBtn.prop('disabled', true);
   	var obj = this;
+    $("<img>").on('load', function() {
+                                obj.loadingSpinner.html('');
+                          	    obj.startBtn.prop('disabled', false);
+                                obj.picture.attr('src', $(this).attr('src'))
+                                      })
+                .attr('src', this.apiUrl + '/image/last/' + this.st);
   	$.getJSON(this.apiUrl + '/status/information/' + this.st, function(data) {
   	  if (data.payload.information.aktiv) {
   	  	obj.onlineStatus.html('<span class="btn btn-xs btn-' + data.payload.image.color + '">' + data.payload.image.short + '</span>');
   	  } else {
   	    obj.progressBar.prop('disabled', true);
-  	    obj.startBtn.prop('disabled', true);
   	    obj.onlineStatus.html('<span class="btn btn-xs btn-danger">inaktiv</span>');
   	  }
       obj.initRefreshStage();

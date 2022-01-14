@@ -100,13 +100,14 @@ class Webcam extends Controller {
 
   function projekt($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
+    $size = $this->check_size(!isset($param[0]) || empty($param[0])?'640x480':$param[0]);
   	$this->view->print_information = isset($param[0]) && ($param[0]=='' || $param[0]=='1')?1:0;
 
   	$dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
   	  $this->view->data = $this->getShorttagDataFromFile($st);
-  	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/';
+  	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/'.$size;
   	  $this->view->render('header');
   	  $this->view->render('webcam/projekt');
   	  $this->view->render('webcam/archiv-class-js');

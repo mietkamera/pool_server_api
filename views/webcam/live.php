@@ -50,7 +50,7 @@
              data-target=".controller"
              data-src="<?php echo $this->live_src;?>"
              data-autostart="<?php echo $this->autostart;?>"
-             src="<?php echo _URL_STUB_.'/image/last/'.$this->shorttag;?>">
+             >
 
       </div>
       
