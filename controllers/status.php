@@ -117,10 +117,10 @@ class Status extends Controller {
       if (is_file(_SHORT_DIR_.'/'.$st.'/description.js')) {
       	$filename = _SHORT_DIR_.'/'.$st.'/description.js';
         $info = json_decode(file_get_contents($filename), true);
-        $data['payload']['information'] = [ "name"      => isset($info['name'])?$info['name']:'',
+        $data['payload']['information'] = [ "name"      => isset($info['name'])?utf8_encode($info['name']):'',
                                             "ip"        => $ip,
                                             "lastimage" => $lastimage,
-                                            "projekt"   => isset($info['projekt'])?$info['projekt']:'',
+                                            "projekt"   => isset($info['projekt'])?utf8_encode($info['projekt']):'',
                                             "aktiv"     => isset($info['aktiv'])?$info['aktiv']==true?'1':'0':'',
                                             "monitor"   => isset($info['monitor'])?$info['monitor']==true?'1':'0':'',
                                             "other"     => isset($info['other'])?$info['other']:array()

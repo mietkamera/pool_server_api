@@ -293,14 +293,14 @@ class Image extends Controller {
           echo $result;
           return;
         } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht erreichbar.';
-      } else $text = 'sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht aktiv.';
-    } else $text = 'sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Shorttag existiert nicht.';
+      } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht aktiv.';
+    } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Shorttag existiert nicht.';
     
     header("Content-Type: image/jpeg");
     list($w,$h) = explode('x',$size);
     $img = imagecreatetruecolor($w,$h);
-    $tcolor = imagecolorallocate($img, 255, 255, 255);
-    $bcolor = imagecolorallocate($img, 0, 64, 128);
+    $bcolor = imagecolorallocate($img, 255, 255, 255);
+    $tcolor = imagecolorallocate($img, 0, 0, 0);
     $font = './public/fonts/DejaVuSans.ttf';
 
     imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);

@@ -65,7 +65,7 @@
         } else {
           if ($password=='') {
             echo "ok"; // log in
-	        $_SESSION['session_'.$shorttag.'_type'] = $typ;
+	        $_SESSION['session_'.$shorttag.'_type'] = 'user';
 	        $_SESSION['session_'.$shorttag] = rand();
 	        return;
           }
