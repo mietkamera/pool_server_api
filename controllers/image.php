@@ -277,11 +277,11 @@ class Image extends Controller {
       	$ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($ch, CURLOPT_USERPWD, $secret);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
     
         $result = curl_exec($ch);
         $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -292,9 +292,9 @@ class Image extends Controller {
           
           echo $result;
           return;
-        } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht erreichbar.';
-      } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht aktiv.';
-    } else $text = 'Sorry :-('."\n".'Kein Livebild vorhanden!'."\n\n".'Shorttag existiert nicht.';
+        } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht erreichbar.';
+      } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht aktiv.';
+    } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Shorttag existiert nicht.';
     
     header("Content-Type: image/jpeg");
     list($w,$h) = explode('x',$size);
@@ -304,7 +304,7 @@ class Image extends Controller {
     $font = './public/fonts/DejaVuSans.ttf';
 
     imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);
-    imagettftext($img, ceil($w/32), 0, 30, 100, $tcolor, $font, $text);
+    imagettftext($img, ceil($w/48), 0, 30, 100, $tcolor, $font, $text);
     imagejpeg($img);
     imagedestroy($img);
   }
