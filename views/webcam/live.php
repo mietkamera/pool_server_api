@@ -49,7 +49,6 @@
              data-toggle="collapse"
              data-target=".controller"
              data-src="<?php echo $this->live_src;?>"
-             data-autostart="<?php echo $this->autostart;?>"
              >
 
       </div>
