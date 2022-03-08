@@ -1,4 +1,6 @@
 <?php
+require_once 'libs/cls_apitype.php';
+require_once 'libs/cls_imageprofile.php';
 
 class Status extends Controller {
 	
@@ -192,6 +194,59 @@ class Status extends Controller {
     }
     header('Content-Type: application/json');
   	echo json_encode($data);
+  }
+
+  function webcam_status($st='') {
+  	$res_code = '500';
+  	$res_msg  = 'unknown error';
+  	$res_pld  = '';
+  	// Ermittle die IP und die Zugangsdaten des Routers
+    if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
+      foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
+        $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
+        $var_value = trim(str_replace(array('"','\''),'',substr(strstr($row, ':'),1)));
+        switch ($var_name) {
+          case 'api_type':            $api_type = $var_value; break;
+          case 'router_type':         $router_type = $var_value; break;
+          case 'camera_url_protocol': $protocol = $var_value; break;
+          case 'camera_url_address':  $ip = $var_value; break;
+          case 'camera_url_port':     $port = $var_value; break;
+          case 'camera_url_secret':   $secret = $var_value; break;
+          default:
+        }
+      }
+      if(isset($ip)) {
+      	$size = '320x240';
+      	switch ($router_type) {
+      	  case 'teltonika':
+      	    $image_profile = ImageProfile::best_fitting_profile($api_type,$size);
+            $url = $protocol.'://'.$ip.':'.$port.APIType::get_image_url($api_type,$image_profile);
+            break;
+          case 'virtual':
+          default:
+            $url = $protocol.'://'.$ip;
+      	}
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_USERPWD, $secret);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        $result = curl_exec($ch);
+        $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($rescode=='200') {
+          $res_code = '200';
+          $res_msg  = 'Webcam ist verbunden. Ein Bild konnte abgeholt werden.';
+          $res_pld = base64_encode($result);
+        } else $res_msg = 'Die Webcam ist nicht verbunden. Ein Bild konnte nicht abgeholt werden.';
+      } else $res_msg = 'IP der Webcam nicht gefunden oder konfiguriert';
+    } else $res_msg = 'Shorttag nicht vorhanden';
+    $json = '{ "returncode":'.$res_code.', "message":"'.$res_msg.'", "payload": "'.$res_pld.'" }';
+    header('Content-Type: application/json');
+  	echo $json;
   }
   
   /* Ausgabe der MRTG-Images eines bestimmten Zeitbereiches */
