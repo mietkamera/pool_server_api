@@ -239,9 +239,9 @@ class Status extends Controller {
         curl_close($ch);
         if ($rescode=='200') {
           $res_code = '200';
-          $res_msg  = 'Webcam ist verbunden. Ein Bild konnte abgeholt werden.';
+          $res_msg  = 'Ein Vorschaubild konnte abgeholt werden.';
           $res_pld = base64_encode($result);
-        } else $res_msg = 'Die Webcam ist nicht verbunden. Ein Bild konnte nicht abgeholt werden.';
+        } else $res_msg = 'Ein Vorschaubild konnte nicht abgeholt werden.';
       } else $res_msg = 'IP der Webcam nicht gefunden oder konfiguriert';
     } else $res_msg = 'Shorttag nicht vorhanden';
     $json = '{ "returncode":'.$res_code.', "message":"'.$res_msg.'", "payload": "'.$res_pld.'" }';

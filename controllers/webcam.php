@@ -81,7 +81,8 @@ class Webcam extends Controller {
   
   function video($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
-  	$this->view->print_information = isset($param[0]) && ($param[0]=='' || $param[0]=='1')?1:0;
+    $this->view->video_size = count($param)>0?$param[0]:'hd';
+  	$this->view->with_controls = count($param)>1?(($param[1]=='' || $param[1]=='1')?true:false):true;
 
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {

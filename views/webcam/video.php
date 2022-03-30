@@ -7,12 +7,13 @@
           </video>
         </div>
       </div>
+      <?php if ($this->with_controls) { ?>
       <div id="videoControls" class="col-12">
         <div class="row align-items-center py-2">
           <div class="col-12">
             <div class="btn-group btn-group-sm">
               <div class="custom-control custom-switch pt-1">
-                <input type="checkbox" class="switch-hd custom-control-input" id="swichHD">
+                <input type="checkbox" class="switch-hd custom-control-input" id="swichHD" <?php echo $this->video_size=='hd'?"checked":"";?>>
                 <label class="custom-control-label" for="switchHD">HD-Aufl&ouml;sung</label>
               </div>
               <a href="#" class="video-download-btn btn btn-sm btn-outline-warning ml-3 rounded"><i class="fas fa-save"></i></a>
@@ -21,6 +22,7 @@
           </div>
         </div>
       </div>
+      <?php } ?>
     </div>
   </div>
   
