@@ -1,5 +1,3 @@
-<script>
-
 class Pictures {
 
   constructor (st,elementId,apiUrl='') {
@@ -136,6 +134,12 @@ class Pictures {
   	this.picture.attr('src', this.getImageURI(day,time)).on('load', function() { obj.enableControls(); });
   	this.pictureBtnDownload.attr('href', this.apiUrl + '/image/download/' + this.st + '/' + this.getImageURIParameter(day,time));
   	this.curtain.removeClass('d-none');
+  	setTimeout(function() {
+  	  obj.curtain.addClass('d-none');
+  	  obj.setStatusDayString();
+      obj.setStatusImageString();
+      obj.timeControl.prop('disabled', false);
+  	},10*1000);
   	this.cacheDayImageThumbs(day);
   }  
   
@@ -396,6 +400,12 @@ class Pictures {
           obj.timeControl.attr('max', time);
   	      obj.timeControl.val(time);
   	      obj.pictureBtnDownload.attr('href', obj.apiUrl + '/image/download/' + obj.st + '/' + obj.getImageURIParameter(day,time));
+  	      setTimeout(function() {
+                       obj.curtain.addClass('d-none');
+                       obj.setStatusDayString();
+                       obj.setStatusImageString();
+                       obj.timeControl.prop('disabled', false);
+                     },10*1000);
   	      obj.cacheDayImageThumbs(day);
   	      //this.cacheDayImages(day);
   	      obj.cacheDayThumbs();
@@ -413,5 +423,3 @@ class Pictures {
   }
   
 }
-
-</script>

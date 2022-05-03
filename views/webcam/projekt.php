@@ -11,9 +11,11 @@
             <li class="nav-item" id="nav_video">
               <a class="nav-link" href="#pane-video" role="tab" aria-controls="pane-video" aria-selected="false">Videos</a>
             </li>
-             <li class="nav-item" id="nav_live">
+<?php if ($this->data['allow_live']=="true") { ?>            
+            <li class="nav-item" id="nav_live">
               <a class="nav-link" href="#pane-live" role="tab" aria-controls="pane-live" aria-selected="false">Live</a>
             </li>
+<?php } ?>
           </ul>
         </div>
         <?php
@@ -30,11 +32,11 @@
             <div class="tab-pane" id="pane-video" role="tabpanel">
             <?php $this->render('webcam/video'); ?>
             </div> <!-- tab-pane video -->
-          
+<?php if ($this->data['allow_live']=="true") { ?>          
             <div class="tab-pane" id="pane-live" role="tabpanel">
             <?php $this->render('webcam/live'); ?>
             </div> <!-- tab-pane video -->
-
+<?php } ?>
           </div> <!-- tab-content -->
         </div> <!-- card-body -->
       </div> <!-- card -->

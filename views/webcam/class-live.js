@@ -1,5 +1,3 @@
-<script>
-
 class Live {
 
   constructor(st,elementId,apiUrl='') {
@@ -145,7 +143,7 @@ class Live {
     }, 1000*60);
   }
 
-  initStage() {
+  initStage(afterSuccessfulInit='') {
     this.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
   	this.startBtn.prop('disabled', true);
   	var obj = this;
@@ -171,11 +169,10 @@ class Live {
         obj.time = lastDay.files[Object.keys(lastDay.files).length-1];
   	    obj.dayStr.html(obj.getDayString());
   	    obj.timeStr.html(obj.getTimeString());
+  	    afterSuccessfulInit();
       }
     });
   }
   
   
 }
-
-</script>

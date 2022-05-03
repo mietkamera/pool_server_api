@@ -4,7 +4,6 @@
   	function __construct() {
   	  session_start();
   	  $this->db = new Database;
-      
       // von welchen URLs aus kann man ohne Passwort Daten abrufen 
       $validip = false;
       $iprecord = $this->db->query('SELECT path FROM valid_ips WHERE ip="'.$_SERVER['REMOTE_ADDR'].'"');

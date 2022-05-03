@@ -1,5 +1,3 @@
-<script>
-
   class Video {
   	
     constructor (st,elementId,apiUrl='') {
@@ -16,7 +14,18 @@
         this.switchHD = $('#' + elementId + ' .switch-hd');
         
         var obj = this;
-        this.switchHD.on('click', this.onSwitchHD() );
+        this.switchHD.on('click', function() {
+          obj.videoClip.get(0).pause();
+          var active = obj.videoPlayList.find('.active').eq(0);
+          if (active.length>0 ) {
+            obj.videoClip.attr({
+               "src": obj.apiUrl + '/video/mp4/' + obj.st + (obj.switchHD.is(":checked") ? '/hd.' : '/vgax.') + active.attr("movie"),
+               "poster": obj.apiUrl + '/video/jpeg/' + obj.st + (obj.switchHD.is(":checked") ? '/hd.' : '/vgax.') + active.attr("movie")
+            });
+            obj.videoDownloadBtn.attr('href', obj.apiUrl + '/video/download/' + obj.st + (obj.switchHD.is(":checked") ? '/hd.' : '/vgax.') + obj.videoPlayList.find('.active').attr("movie"));
+            obj.videoClip.get(0).load();
+          }
+        });
         
         this.videoPlayList.on('click', 'li', function() {
           obj.videoPlayList.find('.active').removeClass('active');
@@ -33,20 +42,7 @@
       }
     }
 
-    onSwitchHD () {
-      this.videoClip.get(0).pause();
-      var active = this.videoPlayList.find('.active').eq(0);
-      if (active.length>0 ) {
-        this.videoClip.attr({
-              "src": url_stub + '/video/mp4/' + this.st + (this.switchHD.is(":checked") ? '/hd.' : '/vgax.') + active.attr("movie"),
-              "poster": url_stub + '/video/jpeg/' + this.st + (this.switchHD.is(":checked") ? '/hd.' : '/vgax.') + active.attr("movie")
-        });
-        this.videoDownloadBtn.attr('href', url_stub + '/video/download/' + this.st + (this.switchHD.is(":checked") ? '/hd.' : '/vgax.') + $("#videoPlaylist .active").attr("movie"));
-        this.videoClip.get(0).load();
-      }
-    }
-    
-    loadData (data) {
+    loadData(data) {
       if ('all' in data && data.all !== undefined)
   	    this.all = data.all;
        else
@@ -63,22 +59,22 @@
       return this.kw.length;
     }
   
-    numComplete () {
+    numComplete() {
       if (this.all === '')
         return 0
        else
         return 1;
     }
   
-    getCompleteURI () {
+    getCompleteURI() {
       return this.all;
     }
   
-    getKwURI (index) {
+    getKwURI(index) {
       return this.kw[index];
     }
  
-    initStage () {
+    initStage() {
       var obj = this;
   	  $.getJSON(this.apiUrl + '/video/json/' + this.st, function(data) {
         setTimeout(obj.loadData(data), 0);
@@ -87,7 +83,7 @@
   	        obj.videoPlayList.append('<li class="btn btn-sm btn-outline-primary active btn-block my-2" movie="all">Video &uuml;ber die gesammte Zeit</li>');
   	      for (var i = 0; i < obj.numKW(); i++) 
   	        obj.videoPlayList.append('<li class="btn btn-sm btn-outline-secondary mr-1 mb-1" movie="kw.' + obj.getKwURI(i) + '">' + obj.getKwURI(i) + '</li>');
-  	      obj.videoDownloadBtn.attr('href', url_stub + '/video/download/' + obj.st + '/vgax.all');
+  	      obj.videoDownloadBtn.attr('href', obj.apiUrl + '/video/download/' + obj.st + (obj.switchHD.is(":checked") ? '/hd.' : '/vgax.'));
   	      obj.videoClip.attr({
               "src": url_stub + '/video/mp4/' + obj.st + (obj.switchHD.is(":checked") ? '/hd.' : '/vgax.') + obj.videoPlayList.find('li').eq(0).attr("movie"),
               "poster": url_stub + '/video/jpeg/' + obj.st + (obj.switchHD.is(":checked") ? '/hd.' : '/vgax.') + obj.videoPlayList.find('li').eq(0).attr("movie")
@@ -97,4 +93,3 @@
     }
    
   }
-</script>

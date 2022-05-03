@@ -32,6 +32,8 @@
 </head>
 <body>
   <script type="text/javascript">
-    var url_stub = '<?php echo _URL_STUB_;?>';
+    let url_stub = '<?php echo _URL_STUB_;?>';
+    let hostName = "<?php echo $_SERVER['SERVER_NAME'];?>";
+    let shorttag = "<?php echo isset($this->shorttag)?$this->shorttag:'';?>";
   </script>
 

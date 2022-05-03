@@ -45,9 +45,9 @@ class Image extends Controller {
   // 
   function first($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
-  	$size = $this->check_size(empty($param[1])?'':$param[1]);
-  	$images = $this->get_image_file_names($st,$date);
+  	$date = empty($param[0])?'':$this->check_date($param[0]);
+  	$size = empty($param[1])?'':$this->check_size($param[1]);
+  	$images = $this->model->get_image_file_names($st,$date);
   	
     if (count($images)>0) {
       switch (strlen($date)) {
@@ -88,13 +88,13 @@ class Image extends Controller {
   // 
   function last($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
-  	$size = $this->check_size(empty($param[1])?'':$param[1]);
+  	$date = empty($param[0])?'':$this->check_date($param[0]);
+  	$size = empty($param[1])?'':$this->check_size($param[1]);
 
   	if ($date=='' && is_link(_SHORT_DIR_.'/'.$st.'/img/lastimage.jpg')) {
   	  $images[] = readlink(_SHORT_DIR_.'/'.$st.'/img/lastimage.jpg')."\n";
   	} else
-      $images = $this->get_image_file_names($st,$date);
+      $images = $this->model->get_image_file_names($st,$date);
 
     if (count($images)>0) {
       switch (strlen($date)) {
@@ -137,7 +137,7 @@ class Image extends Controller {
   function get($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$param[0];
-  	$size = $this->check_size(empty($param[1])?'':$param[1]);
+  	$size = empty($param[1])?'':$this->check_size($param[1]);
 
   	$y = substr($date,0,4);
   	$m = substr($date,4,2);
@@ -238,30 +238,21 @@ class Image extends Controller {
   }
   
   function live($st,$parameter="") {
+  
   	$param = array_map('trim',explode('.',$parameter));
-  	$size = $this->check_size(empty($param[0])?'320x240':$param[0]);
+  	$size = empty($param[0])?'320x240':$this->check_size($param[0]);
 
   	// Ermittle die IP und die Zugangsdaten des Routers
     if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
-      $active   = false;
-      $api_type = 'm12d';
-      $router_type = 'teltonika';
-      $protocol = 'https';
-      $port ='8444';
-      foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
-        $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
-        $var_value = trim(str_replace(array('"','\''),'',substr(strstr($row, ':'),1)));
-        switch ($var_name) {
-          case 'active':              $active = $var_value == 'true'; break;
-          case 'api_type':            $api_type = $var_value; break;
-          case 'router_type':         $router_type = $var_value; break;
-          case 'camera_url_protocol': $protocol = $var_value; break;
-          case 'camera_url_address':  $ip = $var_value; break;
-          case 'camera_url_port':     $port = $var_value; break;
-          case 'camera_url_secret':   $secret = $var_value; break;
-          default:
-        }
-      }
+      $data        = $this->model->getShorttagDataFromFile($st);
+      $active      = $data['active'];
+      $api_type    = $data['api_type'];
+      $allow_live  = $data['allow_live']=="true";
+      $router_type = $data['router_type'];
+      $protocol    = $data['camera_url_protocol'];
+      $ip          = $data['camera_url_address'];
+      $port        = $data['camera_url_port'];
+      $secret      = $data['camera_url_secret'];
     }
     if(isset($ip)) {
       if ($active) {
@@ -275,13 +266,13 @@ class Image extends Controller {
             $url = $protocol.'://'.$ip;
       	}
       	$ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_USERPWD, $secret);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-        curl_setopt($ch, CURLOPT_USERPWD, $secret);
     
         $result = curl_exec($ch);
         $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -289,9 +280,11 @@ class Image extends Controller {
         if ($rescode=='200') {
           header("Content-Type: image/jpeg");
           list($w,$h) = explode('x',$size);
-          
-          echo $result;
-          return;
+          if ($allow_live) {
+            echo $result;
+            return;
+          } else 
+            $text = "\n\n".'Anzeige gesperrt!'."\n\n".'Livebild kann nicht angezeigt werden.';
         } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht erreichbar.';
       } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht aktiv.';
     } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Shorttag existiert nicht.';
@@ -367,7 +360,7 @@ class Image extends Controller {
   	$param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$param[0];
   	$js_text = '{ }';
-  	$images = $this->get_image_file_names($st,$date);
+  	$images = $this->model->get_image_file_names($st,$date);
   	if (count($images)>0) {
   	  $js_text = "{\n";
   	  $hourList = '';

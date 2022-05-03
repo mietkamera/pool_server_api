@@ -23,12 +23,12 @@ class Webcam extends Controller {
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
-  	  $this->view->data = $this->getShorttagDataFromFile($st);
+  	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->render('header');
   	  $this->view->render('webcam/last');
-  	  $this->view->render('webcam/last-class-js');
-  	  $this->view->render('webcam/information-class-js');
-  	  $this->view->render('webcam/last-ready-js');
+  	  $this->view->render_script_tag('webcam/class-last');
+  	  $this->view->render_script_tag('webcam/class-information');
+  	  $this->view->render_script_tag('webcam/last');
   	} else {
       $this->view->render('header');
   	  $this->view->render('webcam/no_projekt');
@@ -45,13 +45,13 @@ class Webcam extends Controller {
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
-  	  $this->view->data = $this->getShorttagDataFromFile($st);
+  	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/'.$size;
   	  $this->view->render('header');
   	  $this->view->render('webcam/live');
-  	  $this->view->render('webcam/live-class-js');
-  	  $this->view->render('webcam/information-class-js');
-  	  $this->view->render('webcam/live-ready-js');
+  	  $this->view->render_script_tag('webcam/class-live');
+  	  $this->view->render_script_tag('webcam/class-information');
+  	  $this->view->render_script_tag('webcam/live');
   	} else {
       $this->view->render('header');
   	  $this->view->render('webcam/no_projekt');
@@ -66,12 +66,12 @@ class Webcam extends Controller {
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
-  	  $this->view->data = $this->getShorttagDataFromFile($st);
+  	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->render('header');
   	  $this->view->render('webcam/archiv');
-  	  $this->view->render('webcam/archiv-class-js');
-  	  $this->view->render('webcam/information-class-js');
-  	  $this->view->render('webcam/archiv-ready-js');
+  	  $this->view->render_script_tag('webcam/class-archiv');
+  	  $this->view->render_script_tag('webcam/class-information');
+  	  $this->view->render_script_tag('webcam/archiv');
   	} else {
       $this->view->render('header');
   	  $this->view->render('webcam/no_projekt');
@@ -82,16 +82,17 @@ class Webcam extends Controller {
   function video($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
     $this->view->video_size = count($param)>0?$param[0]:'hd';
-  	$this->view->with_controls = count($param)>1?(($param[1]=='' || $param[1]=='1')?true:false):true;
+  	$this->view->video_controls = count($param)>1?(($param[1]=='' || $param[1]=='1')?true:false):true;
 
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
-  	  $this->view->data = $this->getShorttagDataFromFile($st);
+  	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->render('header');
   	  $this->view->render('webcam/video');
-  	  $this->view->render('webcam/video-class-js');
-  	  $this->view->render('webcam/video-ready-js');
+  	  $this->view->render_script_tag('webcam/class-video');
+  	  $this->view->render_script_tag('webcam/class-information');
+  	  $this->view->render_script_tag('webcam/video');
   	} else {
       $this->view->render('header');
   	  $this->view->render('webcam/no_projekt');
@@ -107,15 +108,18 @@ class Webcam extends Controller {
   	$dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
-  	  $this->view->data = $this->getShorttagDataFromFile($st);
+  	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/'.$size;
+  	  $this->view->video_size = 'hd';
+  	  $this->view->video_controls = true;
   	  $this->view->render('header');
   	  $this->view->render('webcam/projekt');
-  	  $this->view->render('webcam/archiv-class-js');
-  	  $this->view->render('webcam/live-class-js');
-  	  $this->view->render('webcam/video-class-js');
-  	  $this->view->render('webcam/information-class-js');
-  	  $this->view->render('webcam/projekt-ready-js');
+  	  $this->view->render_script_tag('webcam/class-archiv');
+  	  $this->view->render_script_tag('webcam/class-video');
+  	  if ($this->view->data['allow_live']=="true") 
+  	    $this->view->render_script_tag('webcam/class-live');
+  	  $this->view->render_script_tag('webcam/class-information');
+  	  $this->view->render_script_tag('webcam/projekt');
   	} else {
       $this->view->render('header');
   	  $this->view->render('webcam/no_projekt');

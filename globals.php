@@ -16,6 +16,8 @@
 	define('_MRTG_DIR_','/var/www/mrtg');
 	define('_XML_FILE_','../webcam.xml');
 	
+	define('_DEFAULT_IMAGE_SIZE_','2048x1536');
+	
 	define('_GLOBALS_', 0);
  } 
  

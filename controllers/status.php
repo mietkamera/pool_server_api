@@ -161,6 +161,7 @@ class Status extends Controller {
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
       $response = curl_exec($ch);
       if(curl_errno($ch)) {
         //throw new Exception(curl_error($ch));
@@ -244,7 +245,7 @@ class Status extends Controller {
         } else $res_msg = 'Ein Vorschaubild konnte nicht abgeholt werden.';
       } else $res_msg = 'IP der Webcam nicht gefunden oder konfiguriert';
     } else $res_msg = 'Shorttag nicht vorhanden';
-    $json = '{ "returncode":'.$res_code.', "message":"'.$res_msg.'", "payload": "'.$res_pld.'" }';
+    $json = '{ "returncode":'.$res_code.', "api_ver":"'._VERSION_.'", "message":"'.$res_msg.'", "payload": "'.$res_pld.'" }';
     header('Content-Type: application/json');
   	echo $json;
   }

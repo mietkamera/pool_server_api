@@ -143,7 +143,7 @@ class Video extends Controller {
   }
   
   function json($st) {
-  	$videos = $this->get_video_file_names($st);
+  	$videos = $this->model->get_video_file_names($st);
   	if (count($videos)==0)
   	  $videos = array("all"=>[], "kw" => []);
   	header('Content-type:application/json;charset=utf-8');

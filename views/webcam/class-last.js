@@ -1,5 +1,3 @@
-<script>
-
 class Last {
 
   constructor (st,elementId,apiUrl='') {
@@ -106,5 +104,3 @@ class Last {
   }
   
 }
-
-</script>

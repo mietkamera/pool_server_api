@@ -1,5 +1,3 @@
-<script>
-
 class Information {
 
   constructor (st,elementId,apiUrl='') {
@@ -37,5 +35,3 @@ class Information {
     
   }
 }
-
-</script>

@@ -1,5 +1,9 @@
 if (typeof namespace == "undefined")
-  var namespace = { video: {}, info: {} };
+  var namespace = { live:  {}, info: {} };
+
+function afterInit() {
+  
+}
 
 $('document').ready(function() {
 
@@ -8,8 +12,9 @@ $('document').ready(function() {
     namespace.info.initPanel();
   } 
 
-  namespace.video = new Video(shorttag, 'cv_' + shorttag, 'https://' + hostName + url_stub );
-  namespace.video.initStage();
+  namespace.live = new Live(shorttag, 'cl_' + shorttag, 'https://' + hostName + url_stub);
+  namespace.live.initStage(afterInit);
   
   return false;
+
 });

@@ -17,6 +17,11 @@
     <div class="col-sm-8"><p>R&uuml;ckgabe eines JSON-Strings mit Status-Informationen zur Routerverbindung. </p></div>
   </div>
   <div class="row">
+    <div class="col-sm-3"><a href="<?php echo _URL_STUB_.'/status/webcam_status/help';?>">webcam_status</a></div>
+    <div class="col-sm-8"><p>R&uuml;ckgabe eines JSON-Objekts mit Status-Informationen zur angeschlossenen Webcam
+     inklusive einem base64-kodierten Vorschaubild. </p></div>
+  </div>
+  <div class="row">
     <div class="col-sm-3"><a href="<?php echo _URL_STUB_.'/status/chart/help';?>">chart</a></div>
     <div class="col-sm-8"><p>R&uuml;ckgabe einer JPEG-&lt;IMG&gt;-Ressource mit dem MRTG-Bild f&uum;r einen 
       bestimmten Zeitraum. </p></div>

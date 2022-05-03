@@ -23,7 +23,7 @@ class Mjpeg extends Controller {
   function stream($st,$parameter) {
   	$param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$param[0];
-  	$size = $this->check_size(empty($param[1])?'':$param[1]);
+  	$size = empty($param[1])?'2048x1536':$this->check_size($param[1]);
   	list($w,$h) = explode('x',$size);
   	
   	$image_dir = _SHORT_DIR_.'/'.$st.'/img';
@@ -51,7 +51,7 @@ class Mjpeg extends Controller {
   	  	break;
   	}
   	
-    $images = $this->get_image_file_names($st,$date);
+    $images = $this->model->get_image_file_names($st,$date);
     if (sizeof($images)>0) {
       switch (strlen($date)) {
         case 0:
@@ -93,7 +93,7 @@ class Mjpeg extends Controller {
     set_time_limit(0);
 
     # Disable Apache and PHP's compression of output to the client
-    @apache_setenv('no-gzip', 1);
+    # @apache_setenv('no-gzip', 1);
     @ini_set('zlib.output_compression', 0);
 
     # Set implicit flush, and flush all current buffers
@@ -105,7 +105,6 @@ class Mjpeg extends Controller {
     list($ow,$oh) = getimagesize($image_dir.'/'.substr($images[0],0,strlen($images[0])-1));
     
     $must_resize = ($ow!=$w || $oh!=$h);
-
     foreach($images as $index=>$image) {
   	  if ($must_resize) {
         $img =  imagecreatefromjpeg($image_dir.'/'.substr($images[$index],0,strlen($images[$index])-1));
@@ -121,7 +120,7 @@ class Mjpeg extends Controller {
       imagedestroy($timg);
       # The separator
       echo "--$boundary\n";
-  	  
+  	  //error_log('image #'.$index);
     }
   }
   

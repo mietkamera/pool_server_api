@@ -95,15 +95,13 @@
                   </div>
                 </div>
               </div>
-              <img class="day-thumb-img img img-fluid auto-scale goto-day-btn">
-              <button type="button" class="btn btn-info btn-block goto-day-btn" data-dismiss="modal">Setzen und Schlie&szlig;en</button>
+              <img class="day-thumb-img img img-fluid auto-scale goto-day-btn" data-dismiss="modal">
             </div>
           </div>
         </div>
 
         <div class="modal-footer">
           <div class="btn-group btn-group-sm">
-            
             <button type="button" class="btn btn-warning" data-dismiss="modal">Schlie&szlig;en</button>
           </div>
         </div>

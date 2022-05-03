@@ -13,6 +13,13 @@
   	public function render($name) {
   	  require($this->srcRoot.'views/'.$name.'.php');
   	}
+
+  	public function render_script_tag($name) {
+  	  echo "\n".
+  	       '<script type="text/javascript" src="'._URL_STUB_.'/views/'.$name.'.js"></script>'.
+  	       "\n";
+  	}
+
   }
   
 ?>
