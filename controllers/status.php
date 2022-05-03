@@ -41,7 +41,7 @@ class Status extends Controller {
   	echo json_encode($data);
   }
   
-  function information($st='',$parameter='') {
+  function information($st='') {
     if (is_file(_SHORT_DIR_.'/'.$st.'/status')) {
       $status = file_get_contents(_SHORT_DIR_.'/'.$st.'/status');
       $returncode = "200";
@@ -203,48 +203,51 @@ class Status extends Controller {
   	$res_pld  = '';
   	// Ermittle die IP und die Zugangsdaten des Routers
     if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
-      foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
-        $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
-        $var_value = trim(str_replace(array('"','\''),'',substr(strstr($row, ':'),1)));
-        switch ($var_name) {
-          case 'api_type':            $api_type = $var_value; break;
-          case 'router_type':         $router_type = $var_value; break;
-          case 'camera_url_protocol': $protocol = $var_value; break;
-          case 'camera_url_address':  $ip = $var_value; break;
-          case 'camera_url_port':     $port = $var_value; break;
-          case 'camera_url_secret':   $secret = $var_value; break;
-          default:
-        }
-      }
+      $data        = $this->model->getShorttagDataFromFile($st);
+      $active      = $data['active'];
+      $api_type    = $data['api_type'];
+      $allow_live  = $data['allow_live']==="true";
+      $router_type = $data['router_type'];
+      $protocol    = $data['camera_url_protocol'];
+      $ip          = $data['camera_url_address'];
+      $port        = $data['camera_url_port'];
+      $secret      = $data['camera_url_secret'];
       if(isset($ip)) {
-      	$size = '320x240';
-      	switch ($router_type) {
-      	  case 'teltonika':
-      	    $image_profile = ImageProfile::best_fitting_profile($api_type,$size);
-            $url = $protocol.'://'.$ip.':'.$port.APIType::get_image_url($api_type,$image_profile);
-            break;
-          case 'virtual':
-          default:
-            $url = $protocol.'://'.$ip;
-      	}
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_USERPWD, $secret);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-        $result = curl_exec($ch);
-        $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($rescode=='200') {
-          $res_code = '200';
-          $res_msg  = 'Ein Vorschaubild konnte abgeholt werden.';
-          $res_pld = base64_encode($result);
-        } else $res_msg = 'Ein Vorschaubild konnte nicht abgeholt werden.';
-      } else $res_msg = 'IP der Webcam nicht gefunden oder konfiguriert';
-    } else $res_msg = 'Shorttag nicht vorhanden';
+        if ($active) {
+      	  $size = '320x240';
+      	  switch ($router_type) {
+      	    case 'teltonika':
+      	      $image_profile = ImageProfile::best_fitting_profile($api_type,$size);
+              $url = $protocol.'://'.$ip.':'.$port.APIType::get_image_url($api_type,$image_profile);
+              break;
+            case 'virtual':
+            default:
+              $url = $protocol.'://'.$ip;
+      	  }
+          $ch = curl_init($url);
+          curl_setopt($ch, CURLOPT_USERPWD, $secret);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+          $result = curl_exec($ch);
+          $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          curl_close($ch);
+          if ($rescode=='200') {
+            $res_code = '200';
+            if ($allow_live) {
+              $res_msg  = 'Ein Vorschaubild konnte abgeholt werden.';
+              $res_pld = base64_encode($result);
+            } else {
+              $res_msg  = 'Zugriff auf die Webcam m&ouml;glich, aber das Livebild darf nicht angezeigt werden.';
+              $res_pld = base64_encode(file_get_contents('./public/images/empty.jpg'));
+            }
+          } else $res_msg = 'Ein Vorschaubild konnte nicht abgeholt werden.';
+        } else $res_msg = 'Dieser Shorttag ist nicht aktiv.';
+      } else $res_msg = 'IP der Webcam nicht gefunden oder konfiguriert.';
+    } else $res_msg = 'Shorttag nicht vorhanden.';
     $json = '{ "returncode":'.$res_code.', "api_ver":"'._VERSION_.'", "message":"'.$res_msg.'", "payload": "'.$res_pld.'" }';
     header('Content-Type: application/json');
   	echo $json;
@@ -254,14 +257,7 @@ class Status extends Controller {
   /* scope = day|month|year */
   function chart($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
-    $scope = empty($param[0])?'day':$param[0];
-    switch ($scope) {
-      case 'day': break;
-      case 'week': break;
-      case 'month': break;
-      case 'year': break;
-      default: $scope='day';
-    }
+    $scope = empty($param[0])?'day':$this->check_mrtg_scope($param[0]);
     $chart_file = _MRTG_DIR_.'/'.$st.'-'.$scope.'.png';
     if (is_file($chart_file)) {
       header("Content-type: image/png");

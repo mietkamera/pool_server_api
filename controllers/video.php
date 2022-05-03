@@ -20,7 +20,7 @@ class Video extends Controller {
   	$param = array_map('trim',explode('.',$parameter));
   	$type = empty($param[0])?'hd':$param[0];
   	$scope = empty($param[1])?'':$param[1];
-  	$date = empty($param[2])?'':$param[2];
+  	$date = empty($param[2])?'':$this->check_date($param[2]);
   	switch ($type) {
   	  case "hd":
   	  case "full":

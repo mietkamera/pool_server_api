@@ -136,7 +136,7 @@ class Image extends Controller {
   //
   function get($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
+  	$date = empty($param[0])?'':$this->check_time($param[0]);
   	$size = empty($param[1])?'':$this->check_size($param[1]);
 
   	$y = substr($date,0,4);
@@ -155,8 +155,9 @@ class Image extends Controller {
   //
   function download($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
+  	$date = $this->check_time(empty($param[0])?'':$param[0]);
 
+  	error_log('date='.$date);
   	$y = substr($date,0,4);
   	$m = substr($date,4,2);
   	$d = substr($date,6,2);
@@ -197,7 +198,7 @@ class Image extends Controller {
   //
   function thumb($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
+  	$date = $this->check_time(empty($param[0])?'':$param[0]);
   	$width = '240';
 
   	$y = substr($date,0,4);
@@ -247,7 +248,7 @@ class Image extends Controller {
       $data        = $this->model->getShorttagDataFromFile($st);
       $active      = $data['active'];
       $api_type    = $data['api_type'];
-      $allow_live  = $data['allow_live']=="true";
+      $allow_live  = $data['allow_live']==="true";
       $router_type = $data['router_type'];
       $protocol    = $data['camera_url_protocol'];
       $ip          = $data['camera_url_address'];
@@ -284,7 +285,7 @@ class Image extends Controller {
             echo $result;
             return;
           } else 
-            $text = "\n\n".'Anzeige gesperrt!'."\n\n".'Livebild kann nicht angezeigt werden.';
+            $text = "\n\n".'Anzeige gesperrt!'."\n\n".'Livebild darf nicht angezeigt werden.';
         } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht erreichbar.';
       } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Die Webcam ist nicht aktiv.';
     } else $text = 'Sorry :-('."\n\n".'Kein Livebild vorhanden!'."\n\n".'Shorttag existiert nicht.';
@@ -297,7 +298,7 @@ class Image extends Controller {
     $font = './public/fonts/DejaVuSans.ttf';
 
     imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);
-    imagettftext($img, ceil($w/48), 0, 30, 100, $tcolor, $font, $text);
+    imagettftext($img, ceil($w/42), 0, 30, 100, $tcolor, $font, $text);
     imagejpeg($img);
     imagedestroy($img);
   }
@@ -358,7 +359,7 @@ class Image extends Controller {
   
   function json($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
+  	$date = empty($param[0])?'':$this->check_date($param[0]);
   	$js_text = '{ }';
   	$images = $this->model->get_image_file_names($st,$date);
   	if (count($images)>0) {
@@ -398,6 +399,7 @@ class Image extends Controller {
   	header('Content-type:application/json;charset=utf-8');
   	echo utf8_encode($js_text);
   }
+  
 }
 
 ?>

@@ -27,7 +27,7 @@ class Controller {
                                        [   '640x480' , 'vga'   ],
                                        [   '768x576' , 'd1pal' ],
                                        [   '800x600' , 'svga'  ],
-                                       [  '1024x768' , 'xvga'   ],
+                                       [  '1024x768' , 'xvga'  ],
   	                                   [  '1280x960' , 'mega'  ],
   	                                   [ '2048x1536' , 'qxga'  ],
   	                                   [ '2592x1944' , '5mp'   ],
@@ -73,17 +73,59 @@ class Controller {
         case 6:
       	  $y = intval(substr($date,0,4));
   	      $m = intval(substr($date,4,2));
-          if (checkdate(1,$m,$y)) $date = $date_parameter;
+          if (checkdate($m,1,$y)) $date = $date_parameter;
           break;
         case 8:
       	  $y = intval(substr($date,0,4));
   	      $m = intval(substr($date,4,2));
   	      $d = intval(substr($date,6,2));
-  	      if (checkdate($d,$m,$y)) $date = $date_parameter;
+  	      if (checkdate($m,$d,$y)) $date = $date_parameter;
       }
     }
     return $date;
   }
+  
+  private function validatesAsInt($number) {
+    $number = filter_var($number, FILTER_VALIDATE_INT);
+    return ($number !== FALSE);
+  }
+  
+  //
+  // $time_parameter kann ein gueltiges Datum mit Uhrzeit der Form 
+  // YYYYMMDDhhmmss enthalten
+  // Die Funktion prüft den Eingabeparameter und gibt den aktuellen Tag 
+  // in der Form YYYYMMDD000000 aus, wenn der Parameter ungueltig ist
+  //
+  public function check_time($time_parameter) {
+    $time_object = new DateTime();
+    $time = $time_object->format('Ymd000000');
+    if (!empty($time_parameter) && strlen($time_parameter)==14) {
+    	
+      $y = intval(substr($time_parameter,0,4));
+  	  $m = intval(substr($time_parameter,4,2));
+  	  $d = intval(substr($time_parameter,6,2));
+  	  if (checkdate($m,$d,$y) && $this->validatesAsInt(substr($time_parameter,8))) $time = $time_parameter;
+    }
+    return $time;
+  }
+  
+  //
+  // Prueft, ob der Paramter ein gueltiger MRTG-Scope ist
+  // Falls nicht, gibt er den Scope day zurueck
+  //
+  public function check_mrtg_scope($scope_parameter) {
+    $scope = 'day';
+    switch ($scope_parameter) {
+      case 'day':
+      case 'week':
+      case 'month':
+      case 'year':
+        $scope = $scope_parameter;
+        break;
+    }
+    return $scope;
+  }
+  
 }
 
 ?>

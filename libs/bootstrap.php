@@ -72,9 +72,16 @@
       	return false;
       }
 
-      if (method_exists($controller,$method))
-        $controller->$method($shorttag,$parameter);
-       else {
+      if (method_exists($controller,$method)) {
+        if (strlen($shorttag)==6)
+          $controller->$method($shorttag,$parameter);
+         else {
+           require 'controllers/error.php';
+      	   $controller = new MyError();
+      	   $controller->bad_shorttag();
+           return false;
+         }
+      } else {
        	require 'controllers/error.php';
       	$controller = new MyError();
       	$controller->index();

@@ -10,5 +10,10 @@
 	  $this->view->msg = "Diese Seite existiert nicht";
   	  $this->view->render('error/index');
   	}
+  	
+  	function bad_shorttag() {
+	  $this->view->msg = "Der Shorttag ist ung&uuml;ltig";
+  	  $this->view->render('error/index');
+  	}
   }
 ?>

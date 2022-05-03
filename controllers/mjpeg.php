@@ -22,7 +22,7 @@ class Mjpeg extends Controller {
   // 
   function stream($st,$parameter) {
   	$param = array_map('trim',explode('.',$parameter));
-  	$date = empty($param[0])?'':$param[0];
+  	$date = empty($param[0])?'':$this->check_date($param[0]);
   	$size = empty($param[1])?'2048x1536':$this->check_size($param[1]);
   	list($w,$h) = explode('x',$size);
   	
