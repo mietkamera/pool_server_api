@@ -24,6 +24,7 @@ class Webcam extends Controller {
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
+  	  $this->view->enable_cors();
   	  $this->view->render('header');
   	  $this->view->render('webcam/last');
   	  $this->view->render_script_tag('webcam/class-last');
@@ -47,6 +48,7 @@ class Webcam extends Controller {
   	  $this->view->shorttag = $st;
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/'.$size;
+  	  $this->view->enable_cors();
   	  $this->view->render('header');
   	  $this->view->render('webcam/live');
   	  $this->view->render_script_tag('webcam/class-live');
@@ -67,6 +69,7 @@ class Webcam extends Controller {
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
+  	  $this->view->enable_cors();
   	  $this->view->render('header');
   	  $this->view->render('webcam/archiv');
   	  $this->view->render_script_tag('webcam/class-archiv');
@@ -88,6 +91,7 @@ class Webcam extends Controller {
   	if ($st!='' && is_dir($dirname)) {
   	  $this->view->shorttag = $st;
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
+  	  $this->view->enable_cors();
   	  $this->view->render('header');
   	  $this->view->render('webcam/video');
   	  $this->view->render_script_tag('webcam/class-video');
@@ -112,6 +116,7 @@ class Webcam extends Controller {
   	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/'.$size;
   	  $this->view->video_size = 'hd';
   	  $this->view->video_controls = true;
+  	  $this->view->enable_cors();
   	  $this->view->render('header');
   	  $this->view->render('webcam/projekt');
   	  $this->view->render_script_tag('webcam/class-archiv');
