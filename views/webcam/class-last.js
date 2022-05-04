@@ -68,7 +68,7 @@ class Last {
               }
             }
           });
-          $.getJSON(this.apiUrl + '/status/information/' + this.st, function(data) {
+          $.getJSON(obj.apiUrl + '/status/information/' + obj.st, function(data) {
   	        if (data.payload.information.aktiv)
   	          obj.onlineStatus.html('<span class="btn btn-xs btn-' + data.payload.image.color + '">' + data.payload.image.short + '</span>');
   	         else

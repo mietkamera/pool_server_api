@@ -20,4 +20,8 @@ RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 <IfModule mod_headers.c>
   # Caching
   Header set Cache-Control "public"
+  # X-Frame Embedding
+  # Header always unset X-Frame-Options
+  Header always set X-Frame-Options: "ALLOW FROM https://rolix.de"
+  Header always set X-Frame-Options: "ALLOW FROM https://mietkamera.de"
 </IfModule> 
