@@ -58,6 +58,9 @@
   	        case 'getShorttagDataFromFile':
   	        case 'get_image_file_names':
   	        case 'get_video_file_names':
+  	        case 'check_date':
+  	        case 'check_time':
+  	        case 'check_mrtg_scope':
   	          break;
   	  	    default:
   	  	      if ($method_name!=$this->method) {

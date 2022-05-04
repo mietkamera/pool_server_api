@@ -15,11 +15,13 @@
     <div class="col-sm-3"><a href="<?php echo _URL_STUB_.'/video/json/help';?>">json</a></div>
     <div class="col-sm-8"><p>Videokatalog einer Kamera.</p></div>
   </div>
+  <!--
   <div class="row">
     <div class="col-sm-3"><a href="<?php echo _URL_STUB_.'/video/player/help';?>">player</a></div>
     <div class="col-sm-8"><p>Komplette Videoplayer-Website.</p></div>
   </div>
-   <div class="row">
+  -->
+  <div class="row">
     <div class="col-sm-3"><a href="<?php echo _URL_STUB_.'/video/download/help';?>">download</a></div>
     <div class="col-sm-8"><p>Liefert die Videodatei zum Download aus.</p></div>
   </div>

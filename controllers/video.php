@@ -185,6 +185,10 @@ class Video extends Controller {
     }
   }
   
+  /*
+  
+  // This function is not longer supported
+  
   function player($st,$parameter) {
   	$param = array_map('trim',explode('.',$parameter));
   	$video = empty($param[0])?'hd:all':$param[0];
@@ -198,7 +202,7 @@ class Video extends Controller {
   	$this->view->render('video/player');
   	$this->view->render('footer');
   }
-  
+  */
 
 }
 ?>

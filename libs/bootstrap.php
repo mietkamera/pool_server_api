@@ -73,7 +73,7 @@
       }
 
       if (method_exists($controller,$method)) {
-        if (strlen($shorttag)==6)
+        if ($shorttag=='' || strlen($shorttag)==6)
           $controller->$method($shorttag,$parameter);
          else {
            require 'controllers/error.php';
