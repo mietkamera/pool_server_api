@@ -136,9 +136,9 @@ class Image extends Controller {
   //
   function get($st,$parameter='') {
   	$param = array_map('trim',explode('.',$parameter));
+  	
   	$date = empty($param[0])?'':$this->check_time($param[0]);
   	$size = empty($param[1])?'':$this->check_size($param[1]);
-
   	$y = substr($date,0,4);
   	$m = substr($date,4,2);
   	$d = substr($date,6,2);
@@ -246,7 +246,7 @@ class Image extends Controller {
   	// Ermittle die IP und die Zugangsdaten des Routers
     if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
       $data        = $this->model->getShorttagDataFromFile($st);
-      $active      = $data['active'];
+      $active      = $data['active']==="true";
       $api_type    = $data['api_type'];
       $allow_live  = $data['allow_live']==="true";
       $router_type = $data['router_type'];
@@ -298,7 +298,7 @@ class Image extends Controller {
     $font = './public/fonts/DejaVuSans.ttf';
 
     imagefilledrectangle($img, 0, 0, $w, $h, $bcolor);
-    imagettftext($img, ceil($w/42), 0, 30, 100, $tcolor, $font, $text);
+    imagettftext($img, ceil($w/48), 0, 30, 100, $tcolor, $font, $text);
     imagejpeg($img);
     imagedestroy($img);
   }

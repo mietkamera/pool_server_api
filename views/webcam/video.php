@@ -1,15 +1,19 @@
-  <div class="container-fluid" id="cv_<?php echo $this->shorttag;?>">
+<?php
+  require_once('libs/cls_apitype.php');
+  require_once('libs/cls_imageprofile.php');
+  require_once('libs/cls_imageiteration.php');
+?>
+  <div class="container-fluid container-video" id="cv_<?php echo $this->shorttag;?>">
     <div class="row">
-      <div class="col-12 <?php echo $this->print_information==1?'col-lg-7':'';?> px-0 mx-0">
-        <div class="embed-responsive embed-responsive-16by9">
-          <video src="" class="video-clip video-fluid z-depth-1 embed-responsive-item shadow-sm" controls muted>
+      <div class="col-12 <?php echo $this->print_information===1?'col-lg-7':'';?> px-0 mx-0">
+      	<div class="row px-0 mx-0">
+          <div class="embed-responsive embed-responsive-16by9">
+            <video src="" class="video-clip video-fluid z-depth-1 embed-responsive-item shadow-sm" controls muted>
                <!--    <source id="clipSrc" src="#" type="video/mp4"> -->
-          </video>
+            </video>
         </div>
-      </div>
-      <?php if ($this->video_controls) { ?>
-      <div id="videoControls" class="col-12">
-        <div class="row align-items-center py-2">
+        <?php if ($this->video_controls) { ?>
+        <div id="videoControls" class="row px-0 mx-0 pt-2 video-controls">
           <div class="col-12">
             <div class="btn-group btn-group-sm">
               <div class="custom-control custom-switch pt-1">
@@ -21,9 +25,14 @@
             <ul class="video-playlist px-0 mx-0"></ul>
           </div>
         </div>
+        <?php } ?>
+        </div>
       </div>
-      <?php } ?>
-      
+
+
+<?php if (isset($this->print_information) && $this->print_information===1) {       
+        $this->caption = 'Zeitrafferarchiv | &Uuml;bersicht';
+        $this->render('webcam/information-panel');
+      } ?>    
     </div>
   </div>
-  

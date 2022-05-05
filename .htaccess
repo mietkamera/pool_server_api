@@ -22,6 +22,7 @@ RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
   Header set Cache-Control "public"
   # X-Frame Embedding
   # Header always unset X-Frame-Options
-  Header always set X-Frame-Options: "ALLOW FROM https://rolix.de"
-  Header always set X-Frame-Options: "ALLOW FROM https://mietkamera.de"
+  Header append X-Frame-Options: "ALLOW FROM https://rolix.de"
+  Header append X-Frame-Options: "ALLOW FROM https://mietkamera.de"
+  Header append X-Frame-Options: "ALLOW FROM https://www.procurand.de"
 </IfModule> 

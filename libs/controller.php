@@ -86,7 +86,7 @@ class Controller {
   }
   
   private function validatesAsInt($number) {
-    $number = filter_var($number, FILTER_VALIDATE_INT);
+    $number = filter_var($number, FILTER_VALIDATE_REGEXP, ["options"=>["regexp"=>"/^[0-9]+$/"]]);
     return ($number !== FALSE);
   }
   
@@ -100,7 +100,8 @@ class Controller {
     $time_object = new DateTime();
     $time = $time_object->format('Ymd000000');
     if (!empty($time_parameter) && strlen($time_parameter)==14) {
-    	
+      
+
       $y = intval(substr($time_parameter,0,4));
   	  $m = intval(substr($time_parameter,4,2));
   	  $d = intval(substr($time_parameter,6,2));

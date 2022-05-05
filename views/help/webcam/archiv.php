@@ -1,4 +1,4 @@
-<p class="lead">Gibt die Archivbilder als Website aus. Die URL eignet sich sehr gut f&uuml;r die Verwendung in einem iFrame.</p>
+<p class="lead">Gibt die Archivbilder als komplette Website aus.</p>
 <p>Das Archiv wird automatisch aktualisiert. Die URL eignet sich sehr gut f&uuml;r die Verwendung in einem iFrame.</p>
 <h4>URL-Syntax</h4>
 <code><span class="text-success"><?php echo _URL_STUB_.'/'.$this->module.'/'.$this->method.'/';?></span><abbr title="Shorttag der Kamera"><b><em>st</em></b></abbr>/<abbr title="Parameter der Methode"><b><em>par</em></b></abbr></code>

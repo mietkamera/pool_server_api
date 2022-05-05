@@ -33,7 +33,7 @@
           $path = self::$type[$type][1].strtoupper($profile);
           break;
         case self::AXIS:
-          $path = self::$type[$type][1].ImageProfile::size($profile,self::AXIS);
+          $path = self::$type[$type][1].ImageProfile::size(strtoupper($profile),self::AXIS);
       }
       return $path;
     }
