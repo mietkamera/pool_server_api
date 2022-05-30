@@ -93,10 +93,13 @@ class Pictures {
   }
 
   enableControls (day, time) {
-    this.loadingSpinner.html('');
-    this.timeAllController.prop('disabled', false);
-    this.timeLastControl.prop('disabled', parseInt(day)===(this.numDays()-1) && parseInt(time)===(this.numImages(day)-1));
-    this.setStatusImageString();
+  	if (this.numDays()>0) {
+      this.loadingSpinner.html('');
+      this.dayStr.prop('disabled', this.numDays()>1);
+      this.timeAllController.prop('disabled', false);
+      this.timeLastControl.prop('disabled', parseInt(day)===(this.numDays()-1) && parseInt(time)===(this.numImages(day)-1));
+      this.setStatusImageString();
+  	}
   }
   
   timeControlMouseupTouchend (day, time) {
@@ -188,12 +191,13 @@ class Pictures {
   	});
   	this.days.shift();
   	this.files.shift();
-  	console.log(this.days);
-    console.log(this.files);
+  	// console.log(this.days);
+    // console.log(this.files);
   }
   
   refreshData (data) {
   	var updated = false; 
+    var firstData = this.numDays()===0;
     $.each(data, (key, val) => {
       var i;
       var found = false;
@@ -203,7 +207,7 @@ class Pictures {
           if (this.files[i].length != val.files.length) {
             this.files[i] = val.files;
             updated = true;
-            console.log('refreshData: files['+i+'] angepasst');
+            // console.log('refreshData: files['+i+'] angepasst');
           } else {
             console.log('refreshData: ' + val.day + ' no new images');
           }
@@ -213,23 +217,25 @@ class Pictures {
         this.days[i] = val.day;
         this.files[i] = val.files;
         updated = true;
-        console.log('refreshData: ' + val.day + ' new day found');
+        // console.log('refreshData: ' + val.day + ' new day found');
       }
     });
     if (updated) {
-      var day = this.dayControl.val();
-      var time = this.timeControl.val();
-      if (this.dayControl.attr('max')<(this.numDays()-1)) {
-        day = this.numDays()-1;
-        time = this.numImages(day) -1;
-        this.dayControl.attr('max', day);
-        this.dayControl.val(day);
-        this.dayStr.html(this.getDayString(day));
-        this.timeControl.attr('max', time);
-        this.timeControl.val(time);
-        //this.loadedDayThumbs = 0;
-  	    //this.cacheDayThumbs();
+      var day = this.numDays()-1;
+      var time = this.numImages(day) -1;
+      if (!firstData) {
+        day = this.dayControl.val();
+        time = this.timeControl.val();
+        if (this.dayControl.attr('max')<(this.numDays()-1)) {
+          day = this.numDays()-1;
+          time = this.numImages(day) -1;
+        }
       }
+      this.dayControl.attr('max', day);
+      this.dayControl.val(day);
+      this.dayStr.html(this.getDayString(day));
+      this.timeControl.attr('max', time);
+      this.timeControl.val(time);
       if (day == this.dayControl.attr('max')) {
         time = this.timeControl.val();
         if (time == this.timeControl.attr('max')) {
@@ -251,8 +257,12 @@ class Pictures {
   	      console.log('time-range angepasst');
         } else {
           this.timeControl.attr('max', this.numImages(day)-1);
+          this.timeStr.html(this.getTimeString(day,time));
+          this.setStatusDayString();
+          this.setStatusImageString();
         }
       }
+      
     }
     return updated;
   }
@@ -367,7 +377,12 @@ class Pictures {
           var timeMs = d.getTime();
 
           $.getJSON(obj.apiUrl + '/image/json/' + obj.st + '/' + today + '.' + timeMs, function(data) {
+          	
             if (Object.keys(data).length !== 0) {
+              if (obj.numDays() !== 0) {
+                obj.dayStr.prop('disabled', false);
+                obj.timeAllController.prop('disabled', false);
+              }
               var updated = obj.refreshData(data);
             }
           });
@@ -409,8 +424,15 @@ class Pictures {
   	      obj.cacheDayImageThumbs(day);
   	      //this.cacheDayImages(day);
   	      obj.cacheDayThumbs();
+  	    } else {
+  	      obj.curtain.addClass('d-none');
+  	      obj.dayStr.prop('disabled', true);
+          obj.timeAllController.prop('disabled', true);
   	    }
-  	    
+      } else {
+        obj.curtain.addClass('d-none');
+        obj.dayStr.prop('disabled', true);
+        obj.timeAllController.prop('disabled', true);
       }
   	});
   	$.getJSON(this.apiUrl + '/status/information/' + this.st, function(data) {
