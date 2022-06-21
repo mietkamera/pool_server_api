@@ -1,5 +1,5 @@
 if (typeof namespace == "undefined")
-  var namespace = { archiv: {}, video: {}, live: {}, info: {} };
+  var namespace = { archiv: {}, video: {}, live: {}, info: {}, weather: {} };
   
 function afterInit() {
   
@@ -23,7 +23,12 @@ $('document').ready(function() {
     namespace.live = new Live(shorttag, 'cl_' + shorttag, 'https://' + hostName + url_stub);
     namespace.live.initStage(afterInit);
   }
-  
+/*  
+  if ($("#cw_" + shorttag).length) {
+    namespace.weather = new Weather(shorttag, 'cw_' + shorttag);
+    namespace.weather.initStage();
+  }
+*/  
   $('#project-tab-list a').on('click', function (e) {
     e.preventDefault();
     $(this).tab('show');

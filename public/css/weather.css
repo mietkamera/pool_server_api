@@ -1,0 +1,48 @@
+    .weather .media {
+      padding: 0 2rem;
+    }
+
+    .weather figure {
+      font-size: 6rem;
+      margin-bottom: -2rem;
+    }
+
+    .weather-details {
+      font-size: 0.9rem;
+    }
+
+    .weather-details i {
+      text-align: center;
+      width: 20px;
+      margin-right: 7px;
+    }
+
+    .weather .level-item i {
+      margin: .4rem 0;
+      font-size: 2rem;
+    }
+
+    #no-weather-info {
+      top: 48px;
+      background-image: repeating-linear-gradient(-45deg,
+          transparent,
+          transparent 20px,
+          rgba(0, 0, 0, .2) 20px,
+          rgba(0, 0, 0, .2) 40px);
+    }
+
+    #no-weather-info .notification {
+      margin: 0 auto;
+      border-radius: 10px;
+      padding: 20px 40px;
+    }
+
+    #autoComplete_list {
+      position: absolute;
+    }
+
+    .response pre {
+      background-color: #fff;
+      padding: 0;
+      font-size: .75em;
+    }

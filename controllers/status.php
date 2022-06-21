@@ -72,6 +72,11 @@ class Status extends Controller {
           $description = "Die Kamera ist seit mehr als 4 Stunden offline";
           $color       = "secondary";
           break;
+        case "long_offline":
+          $short       = "offline";
+          $description = "Die Kamera ist seit mehr als 24 Stunden offline";
+          $color       = "dark";
+          break;
         case "soft_ok":
           $short       = "online";
           $description = "Die Kamera liefert wieder Bilder";

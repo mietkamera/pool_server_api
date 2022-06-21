@@ -117,6 +117,7 @@ class Webcam extends Controller {
   	  $this->view->render('webcam/projekt');
   	  $this->view->render_script_tag('webcam/class-archiv');
   	  $this->view->render_script_tag('webcam/class-video');
+  	  
   	  if ($this->view->data['allow_live']=="true") 
   	    $this->view->render_script_tag('webcam/class-live');
   	  $this->view->render_script_tag('webcam/class-information');

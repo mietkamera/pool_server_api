@@ -96,6 +96,7 @@ class Pictures {
   	if (this.numDays()>0) {
       this.loadingSpinner.html('');
       this.dayStr.prop('disabled', this.numDays()>1);
+      this.dayBtn.prop('disabled', this.numDays()>1);
       this.timeAllController.prop('disabled', false);
       this.timeLastControl.prop('disabled', parseInt(day)===(this.numDays()-1) && parseInt(time)===(this.numImages(day)-1));
       this.setStatusImageString();
@@ -141,6 +142,7 @@ class Pictures {
   	  obj.curtain.addClass('d-none');
   	  obj.setStatusDayString();
       obj.setStatusImageString();
+      obj.dayStr.prop('disabled', false);
       obj.timeControl.prop('disabled', false);
   	},10*1000);
   	this.cacheDayImageThumbs(day);
@@ -319,6 +321,7 @@ class Pictures {
       this.setStatusImageString();
       /* Loading of day thumbs completed */
       this.timeControl.prop('disabled', false);
+      this.dayStr.prop('disabled', false);
     }
   }
   
