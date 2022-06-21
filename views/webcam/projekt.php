@@ -16,9 +16,11 @@
               <a class="nav-link" href="#pane-live" role="tab" aria-controls="pane-live" aria-selected="false">Live</a>
             </li>
 <?php } ?>
+<!--
             <li class="nav-item" id="nav_weather">
               <a class="nav-link" href="#pane-weather" role="tab" aria-controls="pane-weather" aria-selected="false">Wetter</a>
             </li>
+-->
           </ul>
         </div>
         <?php
@@ -40,9 +42,11 @@
             <?php $this->render('webcam/live'); ?>
             </div> <!-- tab-pane video -->
 <?php } ?>
+<!--
 			<div class="tab-pane" id="pane-weather" role="tabpanel">
             <?php $this->render('weather/pane'); ?>
-            </div> 
+            </div>
+-->
           </div> <!-- tab-content -->
         </div> <!-- card-body -->
       </div> <!-- card -->
