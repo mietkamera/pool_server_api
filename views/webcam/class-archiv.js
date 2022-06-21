@@ -326,17 +326,19 @@ class Pictures {
   }
   
   cacheDayImageThumbs (dI) {
-  	this.imgMax.html((Number(this.timeControl.attr('max'))+1).toString());
-    this.files[dI].forEach( (val, index) => {
-      var obj = this;
-      var image = $('<img/>')
+    if (this.files[dI] !== undefined) {
+  	  this.imgMax.html((Number(this.timeControl.attr('max'))+1).toString());
+      this.files[dI].forEach( (val, index) => {
+        var obj = this;
+        var image = $('<img/>')
              .attr('src', this.getImageThumbURI(dI, index))
              .on('load', function() { obj.onThumbLoad() });
-    })
+      })
+    }
   }
   
   cacheDayImages (dI) {
-    if (this.days[dI] !== undefined) 
+    if (this.files[dI] !== undefined) 
       this.files[dI].forEach( (val, index) => {
         var image = $('<img/>').attr('src', this.getImageURI(dI, index));
       })
@@ -352,7 +354,7 @@ class Pictures {
   }
   
   getTimeString (dI,fI) {
-  	if (this.days[dI][fI] !== undefined) {
+  	if (this.files[dI][fI] !== undefined) {
       let t = this.files[dI][fI];
       return t.substr(0,2) + ':' + t.substr(2,2) + ':' + t.substr(4,2);
   	} else
