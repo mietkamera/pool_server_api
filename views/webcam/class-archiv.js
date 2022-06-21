@@ -336,19 +336,27 @@ class Pictures {
   }
   
   cacheDayImages (dI) {
-    this.files[dI].forEach( (val, index) => {
-      var image = $('<img/>').attr('src', this.getImageURI(dI, index));
-    })
+    if (this.days[dI] !== undefined) 
+      this.files[dI].forEach( (val, index) => {
+        var image = $('<img/>').attr('src', this.getImageURI(dI, index));
+      })
+    
   }
   
   getDayString (dI) {
-    let d = this.days[dI];
-  	return d.substr(6,2) + '.' + d.substr(4,2) + '.' + d.substr(0,4); 
+  	if (this.days[dI] !== undefined) {
+      let d = this.days[dI];
+  	  return d.substr(6,2) + '.' + d.substr(4,2) + '.' + d.substr(0,4); 
+  	} else
+  	  return '00.00.0000';
   }
   
   getTimeString (dI,fI) {
-    let t = this.files[dI][fI];
-    return t.substr(0,2) + ':' + t.substr(2,2) + ':' + t.substr(4,2);
+  	if (this.days[dI][fI] !== undefined) {
+      let t = this.files[dI][fI];
+      return t.substr(0,2) + ':' + t.substr(2,2) + ':' + t.substr(4,2);
+  	} else
+  	  return '00:00:00'
   }
   
   getImageURIParameter (dI,fI) {
