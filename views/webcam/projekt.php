@@ -1,7 +1,5 @@
-<div class="container-fluid">
-  <div class="row">
     <div class="col px-0 mx-0">  
-      <div class="card px-0 mx-1 pt-0" style="width:100%">
+      <div class="card px-0 mx-0 pt-0" style="width:100%">
         <div class="card-header">
   	    	
           <ul class="nav nav-tabs card-header-tabs" id="project-tab-list" role="tablist">
@@ -23,10 +21,6 @@
 -->
           </ul>
         </div>
-        <?php
-          $pi = $this->print_information;
-          $this->print_information=false;
-        ?>
         <div class="card-body mx-1 px-0 py-1">
           <div class="tab-content">
     
@@ -51,14 +45,5 @@
         </div> <!-- card-body -->
       </div> <!-- card -->
     </div>
-    <?php 
-      $this->print_information = $pi;
-      if (isset($this->print_information) && $this->print_information===1) {       
-        $this->caption = 'Projekt | &Uuml;bersicht';
-        $this->render('webcam/information-panel');
-      } 
-    ?>    
 
     
-  </div>
-</div>

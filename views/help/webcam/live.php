@@ -15,13 +15,13 @@
   <div class="row">
     <div class="col-sm-2 col-lg-1"><code>autostart</code></div>
     <div class="col-sm-8 col-lg-6"><p>Wenn der Parameter 1 ist, wird der Abruf der Livebilder sofort 
-    gestartet. Standardwert ist 0.</p></div>
+    gestartet. Der Standardwert ist 0.</p></div>
   </div>
   <div class="row">
     <div class="col-sm-2 col-lg-1"><code>info</code></div>
-    <div class="col-sm-8 col-lg-6"><p>Wenn der Parameter 1 ist oder ausgelassen wird, wird zus&auml;tzlich 
-      zum Archiv-Widget ein Informationsbereich ausgegeben. Um den Informationbereich abzuschalten und die 
-      gesamte Bildschirmbreite zu nutzen, muss der Wert auf 0 gesetzt werden.</p></div>
+    <div class="col-sm-8 col-lg-6"><p>Ausgabe zus&auml;tzlicher Informationen neben oder unter dem Live-Widget. 
+      M&ouml;gliche Werte sind 0 oder 1. Wird der Parameter nicht angegeben, setzt die API den Standardwert 0.
+      Dann wird der Informationbereich abgeschaltet und die gesamte Bildschirmbreite f&uuml;r die Ausgabe genutzt.</p></div>
   </div>
 </div>
 <hr/><h4>Beispiel</h4>

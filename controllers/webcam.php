@@ -18,7 +18,7 @@ class Webcam extends Controller {
   
   function last($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
-  	$this->view->print_information = isset($param[0]) && ($param[0]=='' || $param[0]=='1')?1:0;
+  	$this->view->print_information = isset($param[0])?$param[0]=='1'?1:0:0;
 
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
@@ -26,8 +26,12 @@ class Webcam extends Controller {
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->render('header');
   	  $this->view->render('webcam/last');
+  	  if ($this->view->print_information) {
+        $this->view->caption = 'Projekt | &Uuml;bersicht';
+        $this->view->render('webcam/information-panel');
+        $this->view->render_script_tag('webcam/class-information');
+      }
   	  $this->view->render_script_tag('webcam/class-last');
-  	  $this->view->render_script_tag('webcam/class-information');
   	  $this->view->render_script_tag('webcam/last');
   	} else {
       $this->view->render('header');
@@ -40,7 +44,7 @@ class Webcam extends Controller {
     $param = array_map('trim',explode('.',$parameter));
     $size = $this->check_size(!isset($param[0]) || empty($param[0])?'640x480':$param[0]);
   	$this->view->autostart = !isset($param[1]) || $param[1]==''?0:$param[1]=='1'?1:0;
-    $this->view->print_information = !isset($param[2])?1:($param[2]=='' || $param[2]=='1')?1:0;
+    $this->view->print_information = count($param)>2?isset($param[2])?$param[2]=='1'?1:0:0:0;
     
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
@@ -49,8 +53,12 @@ class Webcam extends Controller {
   	  $this->view->live_src = 'https://'.$_SERVER['SERVER_NAME']._URL_STUB_.'/image/live/'.$st.'/'.$size;
   	  $this->view->render('header');
   	  $this->view->render('webcam/live');
+  	  if ($this->view->print_information) {
+        $this->view->caption = 'Projekt | &Uuml;bersicht';
+        $this->view->render('webcam/information-panel');
+        $this->view->render_script_tag('webcam/class-information');
+      }
   	  $this->view->render_script_tag('webcam/class-live');
-  	  $this->view->render_script_tag('webcam/class-information');
   	  $this->view->render_script_tag('webcam/live');
   	} else {
       $this->view->render('header');
@@ -61,7 +69,7 @@ class Webcam extends Controller {
 
   function archiv($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
-  	$this->view->print_information = isset($param[0]) && ($param[0]=='' || $param[0]=='1')?1:0;
+  	$this->view->print_information = isset($param[0])?$param[0]=='1'?1:0:0;
 
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
@@ -69,8 +77,12 @@ class Webcam extends Controller {
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->render('header');
   	  $this->view->render('webcam/archiv');
+  	  if ($this->view->print_information) {
+        $this->view->caption = 'Projekt | &Uuml;bersicht';
+        $this->view->render('webcam/information-panel');
+        $this->view->render_script_tag('webcam/class-information');
+      }
   	  $this->view->render_script_tag('webcam/class-archiv');
-  	  $this->view->render_script_tag('webcam/class-information');
   	  $this->view->render_script_tag('webcam/archiv');
   	} else {
       $this->view->render('header');
@@ -83,7 +95,7 @@ class Webcam extends Controller {
     $param = array_map('trim',explode('.',$parameter));
     $this->view->video_size = count($param)>0?empty($param[0])?'hd':$param[0]:'hd';
   	$this->view->video_controls = count($param)>1?(($param[1]=='' || $param[1]=='1')?true:false):true;
-  	$this->view->print_information = count($param)>2?(isset($param[2]) && ($param[2]=='' || $param[2]=='1')?1:0):1;
+  	$this->view->print_information = count($param)>2?isset($param[2])?$param[2]=='1'?1:0:0:0;
 
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
@@ -91,8 +103,12 @@ class Webcam extends Controller {
   	  $this->view->data = $this->model->getShorttagDataFromFile($st);
   	  $this->view->render('header');
   	  $this->view->render('webcam/video');
+  	  if ($this->view->print_information) {
+        $this->view->caption = 'Projekt | &Uuml;bersicht';
+        $this->view->render('webcam/information-panel');
+        $this->view->render_script_tag('webcam/class-information');
+      }
   	  $this->view->render_script_tag('webcam/class-video');
-  	  $this->view->render_script_tag('webcam/class-information');
   	  $this->view->render_script_tag('webcam/video');
   	} else {
       $this->view->render('header');
@@ -104,7 +120,7 @@ class Webcam extends Controller {
   function projekt($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
     $size = $this->check_size(!isset($param[0]) || empty($param[0])?'640x480':$param[0]);
-  	$this->view->print_information = isset($param[0]) && ($param[0]=='' || $param[0]=='1')?1:0;
+  	$this->view->print_information = isset($param[0])?($param[0]=='' || $param[0]=='1')?1:0:1;
 
   	$dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
@@ -115,12 +131,16 @@ class Webcam extends Controller {
   	  $this->view->video_controls = true;
   	  $this->view->render('header');
   	  $this->view->render('webcam/projekt');
+  	  if ($this->view->print_information) {
+        $this->view->caption = 'Projekt | &Uuml;bersicht';
+        $this->view->render('webcam/information-panel');
+        $this->view->render_script_tag('webcam/class-information');
+      }
   	  $this->view->render_script_tag('webcam/class-archiv');
   	  $this->view->render_script_tag('webcam/class-video');
   	  
   	  if ($this->view->data['allow_live']=="true") 
   	    $this->view->render_script_tag('webcam/class-live');
-  	  $this->view->render_script_tag('webcam/class-information');
   	  $this->view->render_script_tag('webcam/projekt');
   	} else {
       $this->view->render('header');

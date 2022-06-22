@@ -1,43 +1,45 @@
-<div class="signin-form">
- <div class="container">
-  <form class="form-signin" method="post" id="loginForm">
-   <img class="float-left" src="<?php echo _URL_STUB_?>/public/images/favicon-32x32.png">
-   <h2 class="form-signin-heading">&nbsp;mietkamera.de</h2><hr />
-   <div id="info">
-    <!-- show info here -->
-   </div>
-   <div id="error">
-    <!-- error will be shown here ! -->
-   </div>
-   <div class="form-group" id="form-s">
-   	<p>Login f&uuml;r den Shorttag <b><?php echo $this->shorttag;?></b> :</p>
-   	<!--<p>REFERER: <?php if (isset($this->redirect)) echo htmlentities($this->redirect);?></p>!-->
-    <input name="shorttag" id="shorttag" type="text" class="form-control" style="display:none;" value="<?php echo $this->shorttag;?>"/>
-   </div>
-   <div class="form-group" id="form-e" style="display:none;">
-    <input name="email" id="email" placeholder="Emailadresse" type="text" class="form-control" data-rule="{val}.length==0 || __isEmail({val})">
-    <div class="invalid-feedback">Geben Sie eine g&uuml;ltige Emailadresse ein.</div>
-   </div>
-   <div class="form-group">
-    <input type="password" class="form-control" placeholder="Passwort" name="password" id="password" />
-   </div>
-   <hr />
-   <div class="form-group">
-    <button type="submit" class="btn btn-default" name="btn-login" id="btn-login">
-      <i class="fas fa-sign-in-alt"></i>&nbsp;</span>&nbsp;Anmelden
-    </button>
-   </div>
-   <div class="form-group form-check" id="form-a">
-   	 <?php if ($this->shorttag!='') { ?>
-   	 <input type="checkbox" class="filled-in form-check-input" name="asadmin" id="asadmin" value="normal">
-     <label for="asadmin" class="disabled form-check-label">Als Administrator anmelden</label>
-     <?php } else { ?>
-     <input type="checkbox" class="disabled filled-in form-check-input" name="asadmin" id="asadmin" value="admin" checked>
-     <label for="asadmin" class="disabled form-check-label">Als Admin anmelden</label>
-     <?php } ?>
-   </div>
-  </form>
- </div>
+<div class="col-12">
+  <div class="signin-form">
+    <div class="container">
+      <form class="form-signin" method="post" id="loginForm">
+        <img class="float-left" src="<?php echo _URL_STUB_?>/public/images/favicon-32x32.png">
+        <h2 class="form-signin-heading">&nbsp;mietkamera.de</h2><hr />
+        <div id="info">
+          <!-- show info here -->
+         </div>
+         <div id="error">
+           <!-- error will be shown here ! -->
+         </div>
+         <div class="form-group" id="form-s">
+   	       <p>Login f&uuml;r den Shorttag <b><?php echo $this->shorttag;?></b> :</p>
+   	       <!--<p>REFERER: <?php if (isset($this->redirect)) echo htmlentities($this->redirect);?></p>!-->
+           <input name="shorttag" id="shorttag" type="text" class="form-control" style="display:none;" value="<?php echo $this->shorttag;?>"/>
+         </div>
+         <div class="form-group" id="form-e" style="display:none;">
+           <input name="email" id="email" placeholder="Emailadresse" type="text" class="form-control" data-rule="{val}.length==0 || __isEmail({val})">
+           <div class="invalid-feedback">Geben Sie eine g&uuml;ltige Emailadresse ein.</div>
+         </div>
+         <div class="form-group">
+           <input type="password" class="form-control" placeholder="Passwort" name="password" id="password" />
+         </div>
+         <hr />
+         <div class="form-group">
+           <button type="submit" class="btn btn-default" name="btn-login" id="btn-login">
+             <i class="fas fa-sign-in-alt"></i>&nbsp;</span>&nbsp;Anmelden
+           </button>
+         </div>
+         <div class="form-group form-check" id="form-a">
+   	       <?php if ($this->shorttag!='') { ?>
+   	       <input type="checkbox" class="filled-in form-check-input" name="asadmin" id="asadmin" value="normal">
+           <label for="asadmin" class="disabled form-check-label">Als Administrator anmelden</label>
+           <?php } else { ?>
+           <input type="checkbox" class="disabled filled-in form-check-input" name="asadmin" id="asadmin" value="admin" checked>
+           <label for="asadmin" class="disabled form-check-label">Als Admin anmelden</label>
+           <?php } ?>
+         </div>
+       </form>
+     </div>
+  </div>
 </div>
 
 <script type="text/javascript" >

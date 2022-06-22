@@ -42,4 +42,6 @@
     let hostName = "<?php echo $_SERVER['SERVER_NAME'];?>";
     let shorttag = "<?php echo isset($this->shorttag)?$this->shorttag:'';?>";
   </script>
+  <div class="container-fluid">
+    <div class="row">
 
