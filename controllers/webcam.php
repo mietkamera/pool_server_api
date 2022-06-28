@@ -27,8 +27,10 @@ class Webcam extends Controller {
   	  $this->view->render('header');
   	  $this->view->render('webcam/last');
   	  if ($this->view->print_information) {
+  	    $this->view->render_direct('<div class="col-12 col-lg-5 mt-3"><div class="row mx-2 mb-3">');
         $this->view->caption = 'Projekt | &Uuml;bersicht';
         $this->view->render('webcam/information-panel');
+        $this->view->render_direct('</div></div>');
         $this->view->render_script_tag('webcam/class-information');
       }
   	  $this->view->render_script_tag('webcam/class-last');
@@ -54,8 +56,10 @@ class Webcam extends Controller {
   	  $this->view->render('header');
   	  $this->view->render('webcam/live');
   	  if ($this->view->print_information) {
+  	    $this->view->render_direct('<div class="col-12 col-lg-5 mt-3"><div class="row mx-2 mb-3">');
         $this->view->caption = 'Projekt | &Uuml;bersicht';
         $this->view->render('webcam/information-panel');
+        $this->view->render_direct('</div></div>');
         $this->view->render_script_tag('webcam/class-information');
       }
   	  $this->view->render_script_tag('webcam/class-live');
@@ -78,8 +82,10 @@ class Webcam extends Controller {
   	  $this->view->render('header');
   	  $this->view->render('webcam/archiv');
   	  if ($this->view->print_information) {
+  	    $this->view->render_direct('<div class="col-12 col-lg-5 mt-3"><div class="row mx-2 mb-3">');
         $this->view->caption = 'Projekt | &Uuml;bersicht';
         $this->view->render('webcam/information-panel');
+        $this->view->render_direct('</div></div>');
         $this->view->render_script_tag('webcam/class-information');
       }
   	  $this->view->render_script_tag('webcam/class-archiv');
@@ -104,8 +110,10 @@ class Webcam extends Controller {
   	  $this->view->render('header');
   	  $this->view->render('webcam/video');
   	  if ($this->view->print_information) {
+  	    $this->view->render_direct('<div class="col-12 col-lg-5 mt-3"><div class="row mx-2 mb-3">');
         $this->view->caption = 'Projekt | &Uuml;bersicht';
         $this->view->render('webcam/information-panel');
+        $this->view->render_direct('</div></div>');
         $this->view->render_script_tag('webcam/class-information');
       }
   	  $this->view->render_script_tag('webcam/class-video');
@@ -120,7 +128,8 @@ class Webcam extends Controller {
   function projekt($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
     $size = $this->check_size(!isset($param[0]) || empty($param[0])?'640x480':$param[0]);
-  	$this->view->print_information = isset($param[0])?($param[0]=='' || $param[0]=='1')?1:0:1;
+  	$this->view->print_information = count($param)>0?($param[0]=='' || $param[0]=='1')?1:0:1;
+  	$this->view->print_weather = count($param)>1?($param[1]=='' || $param[1]=='1')?1:0:1;
 
   	$dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
@@ -131,11 +140,19 @@ class Webcam extends Controller {
   	  $this->view->video_controls = true;
   	  $this->view->render('header');
   	  $this->view->render('webcam/projekt');
-  	  if ($this->view->print_information) {
-        $this->view->caption = 'Projekt | &Uuml;bersicht';
-        $this->view->render('webcam/information-panel');
-        $this->view->render_script_tag('webcam/class-information');
-      }
+  	  if (($this->view->print_information + $this->view->print_weather)>0) {
+  	    $this->view->render_direct('<div class="col-12 col-lg-5 mt-3"><div class="row mx-2 mb-3">');
+  	    if ($this->view->print_information) {
+          $this->view->caption = 'Projekt | &Uuml;bersicht';
+          $this->view->render('webcam/information-panel');
+          $this->view->render_script_tag('webcam/class-information');
+        }
+        $this->view->render_direct('</div><div class="row mx-2">');
+  	    if ($this->view->print_weather) {
+          $this->view->render('weather/weather-panel');
+  	    }
+  	    $this->view->render_direct('</div></div>');
+  	  }
   	  $this->view->render_script_tag('webcam/class-archiv');
   	  $this->view->render_script_tag('webcam/class-video');
   	  

@@ -20,6 +20,10 @@
   	       "\n";
   	}
   	
+  	public function render_direct($html) {
+  	  echo $html;
+  	}
+  	
   }
   
 ?>

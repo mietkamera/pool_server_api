@@ -367,7 +367,7 @@ class Image extends Controller {
   	  $hourList = '';
   	  $lastDay = $this->getJsonDay($images[0],$date);
   	  $arr_length = count($images);
-  	  //error_log(print_r($images[count($images)-1],true));
+  	  // error_log(print_r($images[count($images)-1],true));
       $i = 1;
       foreach($images as $key => $filename) {
         $thisDay = $this->getJsonDay($filename,$date);
@@ -387,7 +387,7 @@ class Image extends Controller {
           	$js_text .= ','."\n";
           } else {
           	$js_text .= ','."\n";
-            $js_text .= '"'.$i.'": { "day": "'.$lastDay.'", "files": ['.$hourList.'] }'."\n";
+            $js_text .= '"'.$i.'": { "day": "'.$thisDay.'", "files": ['.$hourList.'] }'."\n";
           }
 
         }
