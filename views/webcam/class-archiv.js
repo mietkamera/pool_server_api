@@ -159,15 +159,17 @@ class Pictures {
       this.timeControl.trigger(e);
     } else {
   	  var day = parseInt(this.dayControl.val()) + step;
-      time = step>0?0:this.numImages(day)-1;
-      this.dayControl.val(day);
-      this.timeControl.val(time);
-      this.dayStr.html(this.getDayString(day));
-      this.setStatusDayString();
-      this.timeStr.html(this.getTimeString(day,time));
-      this.timeControl.attr('min', 0);
-      this.timeControl.attr('max', this.numImages(day)-1);
-      this.timeControlMouseupTouchend(day, time);
+  	  if (day>0 && this.numDays()>day) {
+        time = step>0?0:this.numImages(day)-1;
+        this.dayControl.val(day);
+        this.timeControl.val(time);
+        this.dayStr.html(this.getDayString(day));
+        this.setStatusDayString();
+        this.timeStr.html(this.getTimeString(day,time));
+        this.timeControl.attr('min', 0);
+        this.timeControl.attr('max', this.numImages(day)-1);
+        this.timeControlMouseupTouchend(day, time);
+  	  }
     }
   }
   
