@@ -129,7 +129,7 @@ class Webcam extends Controller {
     $param = array_map('trim',explode('.',$parameter));
     $size = $this->check_size(!isset($param[0]) || empty($param[0])?'640x480':$param[0]);
   	$this->view->print_information = count($param)>0?($param[0]=='' || $param[0]=='1')?1:0:1;
-  	$this->view->print_weather = count($param)>1?($param[1]=='' || $param[1]=='1')?1:0:1;
+  	$this->view->print_weather = count($param)>1?($param[1]=='' || $param[1]=='1')?1:0:0;
 
   	$dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {
