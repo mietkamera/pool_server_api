@@ -23,7 +23,6 @@
 
 <?php if (isset($this->print_information)) { ?>  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css" type="text/css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css" type="text/css">
   <link href="<?php echo _URL_STUB_;?>/public/css/weather.css" rel="stylesheet">
 <?php }?>  
 

@@ -15,50 +15,46 @@
    <div class="card-body">
 
 
-    <div class="media row align-items-center">
+    <div class="media">
 
-      <div class="media-body col-12">
+      <div class="media-body">
         
         <h5 class="card-title mb-2">
           <span title="Maximum temperature">
-            <span id="weather-max-temp">-
+            <span id="weather-max-temp">19.3
 
             </span> °C
           </span>
           <span class="text-muted">· 
             <span title="Minimum temperature">
-              <span id="weather-min-temp">-</span>
+              <span id="weather-min-temp">14.3</span>
                °C
             </span>
           </span>
         </h5>
         <h6 class="card-subtitle">
-          <p class="font-weight-lighter" title="Weather station name">Station:&nbsp;<span id="weather-station-name">-</span></p>
+          <p class="font-weight-lighter" title="Weather station name"><span id="weather-station-name">Münster/Osnabrück</span></p>
         </h6>
-        </div>
-      </div>
-      <div class="row">
-      	<div class="col-6">
         <p class="card-text text-muted">
-          <span title="Maximaler st&uuml;ndlicher Niederschlag">
-            <i class="wi wi-umbrella mr-2 col-1"></i><span id="weather-max-precipitation">-</span> mm/h
+          <span title="Maximum hourly precipitation">
+            <i class="wi wi-umbrella mr-2 col-1"></i><span id="weather-max-precipitation">0.4</span> mm/h
           </span><br>
-          <span title="Durchschnittliche Windgeschwindigkeit">
-            <i class="wi wi-strong-wind mr-2 col-1"></i><span id="weather-avg-wind-speed">-</span> km/h
+          <span title="Average wind speed">
+            <i class="wi wi-strong-wind mr-2 col-1"></i><span id="weather-avg-wind-speed">9</span> km/h
           </span><br>
-          <span title="Gesamtsonnenscheindauer">
-            <i class="wi wi-day-sunny mr-2 col-1"></i><span id="weather-total-sunshine">-</span> h
+          <span title="Total sunshine duration">
+            <i class="wi wi-day-sunny mr-2 col-1"></i><span id="weather-total-sunshine">6:49</span> h
           </span><br>
-          <span title="Durchschnittliche Wolkenbedeckung">
-            <i class="wi wi-cloudy mr-2 col-1"></i><span id="weather-avg-cloud-cover">-</span> %
+          <span title="Average cloud cover">
+            <i class="wi wi-cloudy mr-2 col-1"></i><span id="weather-avg-cloud-cover">72</span> %
           </span><br>
-          <span title="Durchschnittlicher Atmosph&auml;rendruck, auf den mittleren Meeresspiegel reduziert">
-            <i class="wi wi-barometer mr-2 col-1"></i><span id="weather-avg-pressure">-</span> hPa
+          <span title="Average atmospheric pressure, reduced to mean sea level">
+            <i class="wi wi-barometer mr-2 col-1"></i><span id="weather-avg-pressure">1022.3</span> hPa
           </span><br>    
         </p>
 
       </div>
-      <div class="col-6">
+      <div class="ml-3 h-100">
         <figure>
           <i id="weather-day-icon" class="wi wi-day-cloudy" style="font-size:6rem;"></i>
         </figure>

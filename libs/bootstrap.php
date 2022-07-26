@@ -16,7 +16,7 @@
       	}
       }
       
-	  $url = explode('/',rtrim((isset($_GET['url'])?$_GET['url']:null),'/'));
+      $url = explode('/',rtrim((isset($_GET['url'])?$_GET['url']:null),'/'));
 
       if (empty($url[0])) {
         require 'controllers/index.php';
