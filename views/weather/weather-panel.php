@@ -1,17 +1,29 @@
-  <input type="date" id="date" style="display: none;">
-  <input type="hidden" id="lat" value="<?php echo $this->data["lat"];?>">
-  <input type="hidden" id="lon" value="<?php echo $this->data["lon"];?>">
+<div id="wd_<?php echo $this->shorttag;?>" class="col-12 mb-3">
+	
+  <input type="date"   class="date d-none" id="date">
+  <input type="hidden" class="lat" id="lat" value="<?php echo $this->data["lat"];?>">
+  <input type="hidden" class="lon" id="lon" value="<?php echo $this->data["lon"];?>">
 
-  <div class="card bg-light mb-3 col-12">
-    <div class="card-header text-center">
-      <a id="weather-yesterday-link" class="card-header-icon">
-        ← <span id="weather-yesterday" style="margin-left: 5px"></span>
-      </a>
-      <span id="weather-today"></span>
-      <a id="weather-tomorrow-link" class="card-header-icon">
-        <span id="weather-tomorrow" style="margin-right: 5px"></span> →
-      </a>
+  <div class="card bg-light mx-0 px-0">
+  	
+    <div class="card-header text-center px-0 mx-0">
+      <ul class="nav justify-content-center">
+      	<li class="nav-item">
+          <a id="weather-yesterday-link" class="weather-yesterday-link nav-link">
+        ←   <span id="weather-yesterday" class="weather-yesterday "></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <span id="weather-today" class="weather-today nav-link"></span>
+        </li>
+        <li class="nav-item">
+          <a id="weather-tomorrow-link" class="weather-tomorrow-link nav-link">
+            <span id="weather-tomorrow" ></span> →
+          </a>
+        </li>
+      </ul>
     </div>
+    
    <div class="card-body">
 
 
@@ -71,7 +83,7 @@
       </div>
     </div>
     
-    
+</div>    
     
     
     <script type="module">

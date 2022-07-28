@@ -1,4 +1,4 @@
-      <div id="ci_<?php echo $this->shorttag;?>" class="col-12 px-0 mx-0">
+      <div id="ci_<?php echo $this->shorttag;?>" class="col-12">
         <?php if (isset($this->caption)) { ?>
         <h5><?php echo $this->caption;?></h5>
         <?php } ?>
