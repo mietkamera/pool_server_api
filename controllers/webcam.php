@@ -85,18 +85,17 @@ class Webcam extends Controller {
   	  if (($this->view->print_information + $this->view->print_weather)>0) {
   	    $this->view->render_direct('<div class="col-12 mx-0 px-0 col-lg-5 mt-3">');
   	    if($this->view->print_information) {
-  	    	$this->view->render_direct('<div class="row mx-0 mb-3">');
+  	    	$this->view->render_direct('<div class="row mx-0 px-0 mb-3">');
         	$this->view->caption = 'Projekt | &Uuml;bersicht';
         	$this->view->render('webcam/information-panel');
         	$this->view->render_direct('</div>');
   	    }
   	    if($this->view->print_weather) {
-  	    	$this->view->render_direct('<div class="row mx-0 mb-3">');
+  	    	$this->view->render_direct('<div class="row mx-0 px-0 mb-3">');
         	$this->view->render('weather/weather-panel');
         	$this->view->render_script_tag('weather/class-weather');
         	$this->view->render_direct('</div>');
   	    }
-  	    
         $this->view->render_direct('</div>');
         $this->view->render_script_tag('webcam/class-information');
       }

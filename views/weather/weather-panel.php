@@ -8,38 +8,34 @@
   	
     <div class="card-header text-center px-0 mx-0">
       <ul class="nav justify-content-center">
-      	<li class="nav-item">
+      	<li class="nav-item d-none d-md-inline-block">
           <a id="weather-yesterday-link" class="weather-yesterday-link nav-link">
-        ←   <span id="weather-yesterday" class="weather-yesterday "></span>
+            <i class="fas fa-long-arrow-alt-left"></i>&nbsp;<span id="weather-yesterday" class="weather-yesterday "></span>
           </a>
         </li>
         <li class="nav-item">
           <span id="weather-today" class="weather-today nav-link"></span>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-none d-md-inline-block">
           <a id="weather-tomorrow-link" class="weather-tomorrow-link nav-link">
-            <span id="weather-tomorrow" ></span> →
+            <span id="weather-tomorrow" class="weather-tomorrow"></span>&nbsp;<i class="fas fa-long-arrow-alt-right"></i>
           </a>
         </li>
       </ul>
     </div>
     
    <div class="card-body">
-
-
     <div class="media row align-items-center">
-
       <div class="media-body col-12">
-        
         <h5 class="card-title mb-2">
-          <span title="Maximum temperature">
-            <span id="weather-max-temp">-
+          <span title="Maximaltemperatur">
+            <span id="weather-max-temp" class="weather-max-temp">-
 
             </span> °C
           </span>
           <span class="text-muted">· 
             <span title="Minimum temperature">
-              <span id="weather-min-temp">-</span>
+              <span id="weather-min-temp" class="weather-min-temp">-</span>
                °C
             </span>
           </span>
@@ -50,7 +46,7 @@
         </div>
       </div>
       <div class="row">
-      	<div class="col-6">
+      	<div class="col-7">
         <p class="card-text text-muted">
           <span title="Maximaler st&uuml;ndlicher Niederschlag">
             <i class="wi wi-umbrella mr-2 col-1"></i><span id="weather-max-precipitation">-</span> mm/h
@@ -70,7 +66,7 @@
         </p>
 
       </div>
-      <div class="col-6">
+      <div class="col-5">
         <figure>
           <i id="weather-day-icon" class="wi wi-day-cloudy" style="font-size:6rem;"></i>
         </figure>

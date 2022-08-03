@@ -83,6 +83,7 @@
          }
       } else {
        	require 'controllers/error.php';
+       	error_log('hier');
       	$controller = new MyError();
       	$controller->index();
       	return false;

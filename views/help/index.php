@@ -78,4 +78,8 @@
   Pixeln ab. Beim Abruf der Bilder k&ouml;nnen auch andere Formate angegeben werden. Die Angabe des Formats 
   kann dabei entweder in Pixeln oder in einer Abk&uuml;rzung erfolgen.</p>
   <p>Folgende Formatangaben sind zul&auml;ssig: <?php $this->help->list_image_sizes();?></p>
+  
+  <div class="row">
+    <div class="col"><a href="/legal/impressum/help">impressum</a>&nbsp;|&nbsp;<a href="/legal/agb/help">agb</a>&nbsp;|&nbsp;<a href="/legal/datenschutz/help">datenschutz</a></div>
   </div>
+</div>
