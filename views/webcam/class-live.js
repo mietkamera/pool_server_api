@@ -31,9 +31,10 @@ class Live {
   
   loadBuffer() {
     this.picture.attr("src", this._dlBuffer.attr("src"));
+    this.onlineStatus.html('<span class="btn btn-xs btn-success">online</span>');
     var d = new Date();
     this.dayStr.html(("0" + d.getDate()).slice(-2) + '.' + 
-                     ("0" + d.getMonth()+1).slice(-2) + '.' + 
+                     ("0" + (d.getMonth()+1)).slice(-2) + '.' + 
                      d.getFullYear());
     this.timeStr.html(("0" + d.getHours()).slice(-2) + ':' + 
                       ("0" + d.getMinutes()).slice(-2) + ':' +
@@ -63,6 +64,7 @@ class Live {
   }
   
   errorBuffer() {
+    this.onlineStatus.html('<span class="btn btn-xs btn-warning">offline</span>');
     this.loadingSpinner.html('');
     this._isPlaying = false;
   }
@@ -100,6 +102,14 @@ class Live {
     return this.apiUrl + '/image/get/' + this.st + '/' + this.day + this.time;
   }
 
+  formatDayForAPI (date) {
+    return [
+      date.getFullYear(),
+      (date.getMonth() + 1).toString().padStart(2, '0'),
+      date.getDate().toString().padStart(2, '0'),
+    ].join('');
+  }
+  
   initRefreshStage() {
   	var obj = this;
     this.refreshInterval = setInterval( function() {
@@ -124,7 +134,7 @@ class Live {
                       obj.dayStr.html(obj.getDayString());
   	                  obj.timeStr.html(obj.getTimeString());
                       obj.loadingSpinner.html('<div class="spinner-grow spinner-grow-sm text-danger"></div>');
-                      $("<img>").one('load', function() {
+                      $("<img>").on('load', function() {
                                                  obj.loadingSpinner.html('');
                                                  obj.picture.attr('src', $(this).attr('src'));
                                                })
@@ -162,15 +172,19 @@ class Live {
   	  }
       obj.initRefreshStage();
   	});
-    $.getJSON(this.apiUrl + '/image/json/' + this.st, function(data) {
+  	
+    $.getJSON(this.apiUrl + '/image/json/' + this.st + '/' + this.formatDayForAPI(new Date()), function(data) {
       if (Object.keys(data).length>0) {
   	    var lastDay = data[Object.keys(data).length];
   	    obj.day = lastDay.day;
         obj.time = lastDay.files[Object.keys(lastDay.files).length-1];
   	    obj.dayStr.html(obj.getDayString());
   	    obj.timeStr.html(obj.getTimeString());
-  	    afterSuccessfulInit();
+      } else {
+        obj._dlBuffer
+          .attr('src', obj.picture.attr('data-src') + '.' + Math.floor((Math.random() * 1000) + 1));
       }
+      afterSuccessfulInit();
     });
   }
   
