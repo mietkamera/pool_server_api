@@ -28,6 +28,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"projekt": "Meine Testkameras",<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"aktiv": "1",<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"monitor": "1",<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"live": "1",<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"other": [ "b38211" ]<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br/>
 &nbsp;&nbsp;} <br/>
