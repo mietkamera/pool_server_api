@@ -24,6 +24,7 @@
 	define('_EMAIL_SUPPORT_','info@mietkamera.de');
 	define('_UST_ID_','DE180692926');
 	define('_ADR_NAME_','ROLIX EDV Service &amp; Beratung');
+	define('_ADR_OWNER_','Roland Lauterbach');
 	define('_ADR_STREET_','Westerengler Hauptstr. 7');
 	define('_ADR_ZIP_','99718');
 	define('_ADR_TOWN_','Greu&szlig;en OT Westerengel');

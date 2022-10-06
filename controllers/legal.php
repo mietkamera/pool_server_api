@@ -17,7 +17,7 @@ class Legal extends Controller {
     
   }
   
-  function agb() {
+  function mietbedingungen() {
   
   }
   

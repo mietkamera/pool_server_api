@@ -103,13 +103,28 @@ class Status extends Controller {
                                 ]
               ];
       if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
+        $ip = '';
+        $aktiv = '0';
+        $monitor = '0';
+        $live = '0';
         foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
           // Im Value können durchaus Doppelpunkte auftauchen
           $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
           $var_value = trim(str_replace(array('"','\''),'',substr(strstr($row, ':'),1)));
-          if ($var_name == 'camera_url_address') {
+          switch ($var_name) {
+          case 'camera_url_address':
             $ip = $var_value;
             break;
+          case 'active':
+            $aktiv = $var_value==='true'?'1':'0';
+            break;
+          case 'active_monitoring':
+            $monitor = $var_value==='true'?'1':'0';
+            break;
+          case 'allow_live':
+            $live = $var_value==='true'?'1':'0';
+            break;
+          default:
           }
         }
       }
@@ -128,8 +143,9 @@ class Status extends Controller {
                                             "ip"        => $ip,
                                             "lastimage" => $lastimage,
                                             "projekt"   => isset($info['projekt'])?utf8_encode($info['projekt']):'',
-                                            "aktiv"     => isset($info['aktiv'])?$info['aktiv']==true?'1':'0':'',
-                                            "monitor"   => isset($info['monitor'])?$info['monitor']==true?'1':'0':'',
+                                            "aktiv"     => $aktiv,
+                                            "monitor"   => $monitor,
+                                            "live"      => $live,
                                             "other"     => isset($info['other'])?$info['other']:array()
                                           ];
       }
