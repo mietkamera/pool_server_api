@@ -16,6 +16,8 @@
 { "returncode":"200", <br/>
 &nbsp;&nbsp;"api_ver":"1.0", <br/>
 &nbsp;&nbsp;"message": "Ein Vorschaubild konnte abgeholt werden.",<br/>
+&nbsp;&nbsp;"active": "1",<br/>
+&nbsp;&nbsp;"allow_live": "1",<br/>
 &nbsp;&nbsp;"payload": "/9j/4AAQSkZJRgABAQAAA..." <br/>
 }</code>
 

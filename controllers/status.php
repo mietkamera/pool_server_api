@@ -225,8 +225,9 @@ class Status extends Controller {
   	// Ermittle die IP und die Zugangsdaten des Routers
     if (is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
       $data        = $this->model->getShorttagDataFromFile($st);
-      $active      = $data['active'];
       $api_type    = $data['api_type'];
+      $active      = $data['active']==="true";
+      $monitor     = $data['monitor']==="true";
       $allow_live  = $data['allow_live']==="true";
       $router_type = $data['router_type'];
       $protocol    = $data['camera_url_protocol'];
@@ -269,7 +270,13 @@ class Status extends Controller {
         } else $res_msg = 'Dieser Shorttag ist nicht aktiv.';
       } else $res_msg = 'IP der Webcam nicht gefunden oder konfiguriert.';
     } else $res_msg = 'Shorttag nicht vorhanden.';
-    $json = '{ "returncode":'.$res_code.', "api_ver":"'._VERSION_.'", "message":"'.$res_msg.'", "payload": "'.$res_pld.'" }';
+    $json = '{ "returncode":'.$res_code.', '. 
+               '"api_ver":"'._VERSION_.'", '. 
+               '"message":"'.$res_msg.'", '.
+               '"active":"'.($active?'1':'0').'", '. 
+               '"monitor":"'.($monitor?'1':'0').'",'.
+               '"allow_live":"'.($allow_live?'1':'0').'", '.
+               '"payload": "'.$res_pld.'" }';
     header('Content-Type: application/json');
   	echo $json;
   }
