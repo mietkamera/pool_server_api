@@ -227,7 +227,7 @@ class Status extends Controller {
       $data        = $this->model->getShorttagDataFromFile($st);
       $api_type    = $data['api_type'];
       $active      = $data['active']==="true";
-      $monitor     = $data['monitor']==="true";
+      $monitor     = $data['active_monitoring']==="true";
       $allow_live  = $data['allow_live']==="true";
       $router_type = $data['router_type'];
       $protocol    = $data['camera_url_protocol'];
