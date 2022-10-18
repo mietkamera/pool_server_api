@@ -1,6 +1,7 @@
 <?php
 require_once 'libs/cls_apitype.php';
 require_once 'libs/cls_imageprofile.php';
+require_once 'libs/cls_imageiteration.php';
 
 class Status extends Controller {
 	
@@ -107,6 +108,9 @@ class Status extends Controller {
         $aktiv = '0';
         $monitor = '0';
         $live = '0';
+        $start = '6';
+        $stop = '19';
+        $interval = '300';
         foreach(file(_SHORT_DIR_.'/'.$st.'/shorttag.data') as $row) {
           // Im Value können durchaus Doppelpunkte auftauchen
           $var_name  = trim(str_replace(array('"',':','\''),'',strstr($row, ':', true)));
@@ -123,6 +127,15 @@ class Status extends Controller {
             break;
           case 'allow_live':
             $live = $var_value==='true'?'1':'0';
+            break;
+          case 'image_start':
+            $start = intval($var_value);
+            break;
+          case 'image_stop':
+            $stop = intval($var_value);
+            break;
+          case 'image_iteration':
+            $interval = ImageIteration::interval($var_value);
             break;
           default:
           }
@@ -146,7 +159,10 @@ class Status extends Controller {
                                             "aktiv"     => $aktiv,
                                             "monitor"   => $monitor,
                                             "live"      => $live,
-                                            "other"     => isset($info['other'])?$info['other']:array()
+                                            "other"     => isset($info['other'])?$info['other']:array(),
+                                            "start"     => $start,
+                                            "stop"      => $stop,
+                                            "interval"  => $interval,
                                           ];
       }
     } else {
