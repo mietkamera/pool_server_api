@@ -1,6 +1,6 @@
 <?php
 
-  session_destroy();
+  if (isset($_SESSION)) $_SESSION = []; 
   session_start();
   require '../globals.php';
   require '../dbconfig.php';
