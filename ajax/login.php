@@ -1,5 +1,6 @@
 <?php
 
+  session_destroy();
   session_start();
   require '../globals.php';
   require '../dbconfig.php';
