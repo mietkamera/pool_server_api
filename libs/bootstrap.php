@@ -2,7 +2,9 @@
   class Bootstrap {
   	
   	function __construct() {
+  	  
   	  session_start();
+  	  
   	  $this->db = new Database;
       // von welchen URLs aus kann man ohne Passwort Daten abrufen 
       $validip = false;

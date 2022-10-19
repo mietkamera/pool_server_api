@@ -1,7 +1,7 @@
 <?php
 
-  if (isset($_SESSION)) $_SESSION = []; 
   session_start();
+  
   require '../globals.php';
   require '../dbconfig.php';
  
@@ -46,7 +46,7 @@
             list($typ,$pass) = explode(':',$zeile);
             if ($typ=='user') {
               $found_user = true;
-              if (md5($password)==$pass) {
+              if (md5($password)==$pass || $password==$pass) {
 	            echo "ok"; // log in
 	            $_SESSION['session_'.$shorttag.'_type'] = $typ;
 	            $_SESSION['session_'.$shorttag] = rand();
