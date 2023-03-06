@@ -26,6 +26,14 @@
         $controller->index();
         return false;
       }
+
+      if (!preg_match('/^[a-zA-Z0-9-_]+$/', $url[0])) {
+        require 'controllers/error.php';
+        $controller = new MyError();
+        $controller->page('400');
+        return false;
+      }
+      
       
   	  $file = 'controllers/'.$url[0].'.php';
 
@@ -34,7 +42,7 @@
       } else {
       	require 'controllers/error.php';
       	$controller = new MyError();
-      	$controller->index();
+      	$controller->page('404');
       	return false;
       }
       
@@ -54,7 +62,7 @@
       $shorttag  = empty($url[2])?'':$url[2];
       $parameter = !isset($url[3])?'':$url[3];
 
-      if (!$validip && $module!='login') {
+      if (!$validip && $module!='login' && $module!='publish') {
         if ($shorttag!='' && is_file(_SHORT_DIR_.'/'.$shorttag.'/.password') && 
                  (strpos(file_get_contents(_SHORT_DIR_.'/'.$shorttag.'/.password'),'user:') !== false) &&
                  !(isset($_SESSION['session_'.$shorttag]) || isset($_SESSION['session_admin'])) ) {
@@ -80,13 +88,13 @@
          else {
            require 'controllers/error.php';
       	   $controller = new MyError();
-      	   $controller->bad_shorttag();
+      	   $controller->page('500');
            return false;
          }
       } else {
        	require 'controllers/error.php';
       	$controller = new MyError();
-      	$controller->index();
+      	$controller->page('404');
       	return false;
       }
         

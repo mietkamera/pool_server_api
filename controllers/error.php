@@ -6,14 +6,16 @@
   	  parent::__construct();
   	}
   	
+  	function page($code='500') {
+      $this->view->render('header');
+  	  $this->view->render('error/intro');
+  	  $this->view->render('error/page_'.$code);
+  	  $this->view->render('footer');
+  	}
+
   	function index() {
-	  $this->view->msg = "Diese Seite existiert nicht";
-  	  $this->view->render('error/index');
+	  $this->page('500');
   	}
-  	
-  	function bad_shorttag() {
-	  $this->view->msg = "Der Shorttag ist ung&uuml;ltig";
-  	  $this->view->render('error/index');
-  	}
+
   }
 ?>
