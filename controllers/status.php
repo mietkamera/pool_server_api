@@ -151,11 +151,11 @@ class Status extends Controller {
       } else $lastimage = '';
       if (is_file(_SHORT_DIR_.'/'.$st.'/description.js')) {
       	$filename = _SHORT_DIR_.'/'.$st.'/description.js';
-        $info = json_decode(file_get_contents($filename), true);
-        $data['payload']['information'] = [ "name"      => isset($info['name'])?utf8_encode($info['name']):'',
+        $info = json_decode(file_get_contents($filename), true, 512, JSON_UNESCAPED_UNICODE);
+        $data['payload']['information'] = [ "name"      => isset($info['name'])?$info['name']:'',
                                             "ip"        => $ip,
                                             "lastimage" => $lastimage,
-                                            "projekt"   => isset($info['projekt'])?utf8_encode($info['projekt']):'',
+                                            "projekt"   => isset($info['projekt'])?$info['projekt']:'',
                                             "aktiv"     => $aktiv,
                                             "monitor"   => $monitor,
                                             "live"      => $live,
@@ -172,7 +172,7 @@ class Status extends Controller {
               ];
     }
     header('Content-Type: application/json');
-  	echo json_encode($data);
+  	echo json_encode($data, JSON_UNESCAPED_UNICODE);
   }
 
   function connection_status($st='') {
