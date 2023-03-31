@@ -101,36 +101,36 @@ class Model {
 	  	  }
 	    } 
 	    if (!$use_cache) {
-              switch (strlen($date)) {
+          switch (strlen($date)) {
 	        case 0:
-                  $all_files = scandir($image_stub_dir);
+              $all_files = scandir($image_stub_dir);
 	          foreach($all_files as $year) {
 	            if (strlen($year)==4 && is_numeric($year)) {
 	              $image_dir_y = $image_stub_dir.'/'.$year;
 	              $di = new RecursiveDirectoryIterator($image_dir_y);
 	              $it = new RecursiveIteratorIterator($di);
-                      $rx = new RegexIterator($it, "/^.+\.jpg$/i");
-                      $img = iterator_to_array($rx);
-                      $image_dir_len = strlen($image_dir_y)-4;
-                      foreach($img as $image) {
-                        $images[] = substr($image,$image_dir_len).PHP_EOL;
-                      }
-	            }
-                  }
-                  break;
-                case 4:
-                case 6:
-                case 8:
-	          $di = new RecursiveDirectoryIterator($image_dir);
-	  	  $it = new RecursiveIteratorIterator($di);
                   $rx = new RegexIterator($it, "/^.+\.jpg$/i");
-                  $img = iterator_to_array($rx);
-                  $image_dir_len = strlen($image_dir)+1;
-                  foreach($img as $image) {
+                  //$img = iterator_to_array($rx);
+                  $image_dir_len = strlen($image_dir_y)-4;
+                  foreach(chunk_iterator($rx, 1024) as $image) {
                     $images[] = substr($image,$image_dir_len).PHP_EOL;
                   }
-                  break;
-                default:
+	            }
+              }
+              break;
+            case 4:
+            case 6:
+            case 8:
+	          $di = new RecursiveDirectoryIterator($image_dir);
+	  	      $it = new RecursiveIteratorIterator($di);
+              $rx = new RegexIterator($it, "/^.+\.jpg$/i");
+              $img = iterator_to_array($rx);
+              $image_dir_len = strlen($image_dir)+1;
+              foreach($img as $image) {
+                $images[] = substr($image,$image_dir_len).PHP_EOL;
+              }
+              break;
+            default:
 	      }
 	      if (sizeof($images)>0) {
 	  	    sort($images);
