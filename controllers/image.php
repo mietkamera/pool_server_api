@@ -361,7 +361,7 @@ class Image extends Controller {
   	$param = array_map('trim',explode('.',$parameter));
   	$date = empty($param[0])?'':$this->check_date($param[0]);
   	$js_text = '{ }';
-  	$images = $this->model->get_image_file_names($st,$date);
+	$images = $this->model->get_image_file_names($st,$date);
   	if (count($images)>0) {
   	  $js_text = "{\n";
   	  $hourList = '';

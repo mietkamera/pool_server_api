@@ -56,11 +56,12 @@ class Model {
   	
   	$images = array();
   	$image_stub_dir = _SHORT_DIR_.'/'.$st.'/img';
-    $use_cache = false;
+        $use_cache = false;
   	
   	if (is_dir($image_stub_dir)) {
   	  $last_image_time = is_link($image_stub_dir.'/lastimage.jpg')?filemtime($image_stub_dir.'/lastimage.jpg'):0;
-  	  // Zuerst mal schauen, ob es einen Cache gibtse 
+	  // Zuerst mal schauen, ob es einen Cache gibt 
+	  // error_log('$st='.$st.' strlen($date)='.strlen($date));
   	  switch (strlen($date)) {
   	    case 0:
   	      $image_dir = $image_stub_dir;
@@ -68,23 +69,23 @@ class Model {
    	      break;
   	    case 4:  // Bilder eines bestimmten Jahres
   	      $image_dir = $image_stub_dir.'/'.$date;
-          $cache_time_offset = 31536000000; // 365*24*60*60*1000
-  	  	  break;
+              $cache_time_offset = 31536000000; // 365*24*60*60*1000
+              break;
   	    case 6:
   	      $y = substr($date,0,4);
   	      $m = substr($date,4,2);
-          $image_dir = $image_stub_dir.'/'.$y.'/'.$m;
-          $cache_time_offset = 2678400000; // 31*24*60*60*1000
-          break;
-        case 8:
-          $y = substr($date,0,4);
+              $image_dir = $image_stub_dir.'/'.$y.'/'.$m;
+              $cache_time_offset = 2678400000; // 31*24*60*60*1000
+              break;
+            case 8:
+              $y = substr($date,0,4);
   	      $m = substr($date,4,2);
   	      $d = substr($date,6,2);
-          $image_dir = $image_stub_dir.'/'.$y.'/'.$m.'/'.$d;
-          $cache_time_offset = 86400000; // 24*60*60*1000
-          break;
-        default:
-          $image_dir = '';
+              $image_dir = $image_stub_dir.'/'.$y.'/'.$m.'/'.$d;
+              $cache_time_offset = 86400000; // 24*60*60*1000
+              break;
+            default:
+              $image_dir = '';
   	  }
 	 
 	  if (is_dir($image_dir)) {
@@ -100,38 +101,38 @@ class Model {
 	  	  }
 	    } 
 	    if (!$use_cache) {
-	  	  switch (strlen($date)) {
-	  	  	case 0:
-	  	      $all_files = scandir($image_stub_dir);
-	  	      foreach($all_files as $year) {
-	  	        if (strlen($year)==4 && is_numeric($year)) {
-	  	          $image_dir_y = $image_stub_dir.'/'.$year;
-	  	          $di = new RecursiveDirectoryIterator($image_dir_y);
-	  	          $it = new RecursiveIteratorIterator($di);
+              switch (strlen($date)) {
+	        case 0:
+                  $all_files = scandir($image_stub_dir);
+	          foreach($all_files as $year) {
+	            if (strlen($year)==4 && is_numeric($year)) {
+	              $image_dir_y = $image_stub_dir.'/'.$year;
+	              $di = new RecursiveDirectoryIterator($image_dir_y);
+	              $it = new RecursiveIteratorIterator($di);
+                      $rx = new RegexIterator($it, "/^.+\.jpg$/i");
+                      $img = iterator_to_array($rx);
+                      $image_dir_len = strlen($image_dir_y)-4;
+                      foreach($img as $image) {
+                        $images[] = substr($image,$image_dir_len).PHP_EOL;
+                      }
+	            }
+                  }
+                  break;
+                case 4:
+                case 6:
+                case 8:
+	          $di = new RecursiveDirectoryIterator($image_dir);
+	  	  $it = new RecursiveIteratorIterator($di);
                   $rx = new RegexIterator($it, "/^.+\.jpg$/i");
                   $img = iterator_to_array($rx);
-                  $image_dir_len = strlen($image_dir_y)-4;
+                  $image_dir_len = strlen($image_dir)+1;
                   foreach($img as $image) {
                     $images[] = substr($image,$image_dir_len).PHP_EOL;
                   }
-	  	   	    }
-	  	      }
-	  	      break;
-	  	    case 4:
-	  	    case 6:
-	  	    case 8:
-	  	      $di = new RecursiveDirectoryIterator($image_dir);
-	  	      $it = new RecursiveIteratorIterator($di);
-              $rx = new RegexIterator($it, "/^.+\.jpg$/i");
-              $img = iterator_to_array($rx);
-              $image_dir_len = strlen($image_dir)+1;
-              foreach($img as $image) {
-                $images[] = substr($image,$image_dir_len).PHP_EOL;
-              }
-              break;
-            default:
-	  	  }
-	  	  if (sizeof($images)>0) {
+                  break;
+                default:
+	      }
+	      if (sizeof($images)>0) {
 	  	    sort($images);
   	        // schreibe die Cache-Files
   	        file_put_contents($image_cache,$images);
