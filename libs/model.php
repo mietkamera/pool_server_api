@@ -52,11 +52,11 @@ class Model {
   // liefert. Die Funktion pflegt dabei den Cache, der sich in jedem Verzeichnis
   // befindet.
   //
-  function get_image_file_names($st,$date='') {
+  function &get_image_file_names($st,$date='') {
   	
   	$images = array();
   	$image_stub_dir = _SHORT_DIR_.'/'.$st.'/img';
-        $use_cache = false;
+    $use_cache = false;
   	
   	if (is_dir($image_stub_dir)) {
   	  $last_image_time = is_link($image_stub_dir.'/lastimage.jpg')?filemtime($image_stub_dir.'/lastimage.jpg'):0;
@@ -69,23 +69,23 @@ class Model {
    	      break;
   	    case 4:  // Bilder eines bestimmten Jahres
   	      $image_dir = $image_stub_dir.'/'.$date;
-              $cache_time_offset = 31536000000; // 365*24*60*60*1000
-              break;
+          $cache_time_offset = 31536000000; // 365*24*60*60*1000
+          break;
   	    case 6:
   	      $y = substr($date,0,4);
   	      $m = substr($date,4,2);
-              $image_dir = $image_stub_dir.'/'.$y.'/'.$m;
-              $cache_time_offset = 2678400000; // 31*24*60*60*1000
-              break;
-            case 8:
-              $y = substr($date,0,4);
+          $image_dir = $image_stub_dir.'/'.$y.'/'.$m;
+          $cache_time_offset = 2678400000; // 31*24*60*60*1000
+          break;
+        case 8:
+          $y = substr($date,0,4);
   	      $m = substr($date,4,2);
   	      $d = substr($date,6,2);
-              $image_dir = $image_stub_dir.'/'.$y.'/'.$m.'/'.$d;
-              $cache_time_offset = 86400000; // 24*60*60*1000
-              break;
-            default:
-              $image_dir = '';
+          $image_dir = $image_stub_dir.'/'.$y.'/'.$m.'/'.$d;
+          $cache_time_offset = 86400000; // 24*60*60*100
+          break;
+        default:
+          $image_dir = '';
   	  }
 	 
 	  if (is_dir($image_dir)) {
@@ -107,12 +107,12 @@ class Model {
 	          foreach($all_files as $year) {
 	            if (strlen($year)==4 && is_numeric($year)) {
 	              $image_dir_y = $image_stub_dir.'/'.$year;
+	              $image_dir_len = strlen($image_dir_y)-4;
+	              
 	              $di = new RecursiveDirectoryIterator($image_dir_y);
 	              $it = new RecursiveIteratorIterator($di);
                   $rx = new RegexIterator($it, "/^.+\.jpg$/i");
-                  //$img = iterator_to_array($rx);
-                  $image_dir_len = strlen($image_dir_y)-4;
-                  foreach(chunk_iterator($rx, 1024) as $image) {
+                  foreach($rx as $image) {
                     $images[] = substr($image,$image_dir_len).PHP_EOL;
                   }
 	            }
@@ -122,11 +122,10 @@ class Model {
             case 6:
             case 8:
 	          $di = new RecursiveDirectoryIterator($image_dir);
+              $image_dir_len = strlen($image_dir)+1;
 	  	      $it = new RecursiveIteratorIterator($di);
               $rx = new RegexIterator($it, "/^.+\.jpg$/i");
-              $img = iterator_to_array($rx);
-              $image_dir_len = strlen($image_dir)+1;
-              foreach($img as $image) {
+              foreach($rx as $image) {
                 $images[] = substr($image,$image_dir_len).PHP_EOL;
               }
               break;
@@ -146,35 +145,35 @@ class Model {
     return $images;
   }
   
-    function get_video_file_names($st) {
+  function get_video_file_names($st) {
 
-  	  $videos = array();
-  	  $video_dir = _SHORT_DIR_.'/'.$st.'/movies';
+    $videos = array();
+    $video_dir = _SHORT_DIR_.'/'.$st.'/movies';
   	  
-  	  if (is_dir($video_dir)) {
+    if (is_dir($video_dir)) {
   	  
-        $subdirs = array('all'=>'',
-                         'kw'=>'week',
-                         'month'=>'month');
+      $subdirs = array('all'=>'',
+                       'kw'=>'week',
+                       'month'=>'month');
       
-        foreach($subdirs as $name => $subdir) {
-          $dir_name = $video_dir.($subdir==''?'':'/').$subdir;
+      foreach($subdirs as $name => $subdir) {
+        $dir_name = $video_dir.($subdir==''?'':'/').$subdir;
        
-          $dir = new DirectoryIterator($dir_name);
-          $farr = array();
-          foreach ($dir as $fileinfo) {
-            $filename = $fileinfo->getFilename();
-            if (!$fileinfo->isDot() && strpos($filename,'.mp4') && !strpos($filename,'768')) {
-              $farr[] = substr($filename,0,-4);
-            }
+        $dir = new DirectoryIterator($dir_name);
+        $farr = array();
+        foreach ($dir as $fileinfo) {
+          $filename = $fileinfo->getFilename();
+          if (!$fileinfo->isDot() && strpos($filename,'.mp4') && !strpos($filename,'768')) {
+            $farr[] = substr($filename,0,-4);
           }
-          sort($farr);
-          if (count($farr)>0) $videos[$name] = $farr;
-          unset($farr);
         }
-  	  }
-      return $videos;
-    }
+        sort($farr);
+        if (count($farr)>0) $videos[$name] = $farr;
+        unset($farr);
+      }
+   }
+    return $videos;
+ }
 
 }
 ?>
