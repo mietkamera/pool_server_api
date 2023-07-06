@@ -73,7 +73,7 @@
       	  $controller->auth($shorttag,$_GET['url']);
       	  return false;
         }
-      } else if (!$validip) $parameter = '';
+      } else if (!$validip && $module!='publish') $parameter = '';
       
       if ($shorttag=='help' || ($method!='help' && $shorttag=='')) {
       	require 'controllers/help.php';

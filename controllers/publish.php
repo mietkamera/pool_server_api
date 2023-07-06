@@ -26,8 +26,9 @@ class Publish extends Controller {
   function image($st,$parameter='') {
     if ($st!='' && is_file(_SHORT_DIR_.'/'.$st.'/shorttag.data')) {
       if ($this->get_boolean_from_file($st,'allow_public_image')) {
-        require 'controllers/image.php';
-        $controller = new Image();
+	require 'controllers/image.php';
+	$controller = new Image();
+	$controller->loadModel('image');
         $controller->last($st,$parameter);
       }
     }
@@ -38,6 +39,7 @@ class Publish extends Controller {
       if ($this->get_boolean_from_file($st,'allow_public_movie')) {
         require 'controllers/video.php';
         $controller = new Video();
+	$controller->loadModel('video');
         $controller->mp4($st,$parameter);
       }
     }
