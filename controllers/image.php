@@ -259,15 +259,24 @@ class Image extends Controller {
       if ($active) {
       	switch ($router_type) {
       	  case 'teltonika':
-      	    $image_profile = ImageProfile::best_fitting_profile($api_type,$size);
-            $url = $protocol.'://'.$ip.':'.$port.APIType::get_image_url($api_type,$image_profile);
+      	  	if ($api_type != APIType::REOLINK) {
+      	      $image_profile = ImageProfile::best_fitting_profile($api_type,$size);
+              $url = $protocol.'://'.$ip.':'.$port.APIType::get_image_url($api_type,$image_profile);
+      	  	} else {
+      	  	  $param = explode(':',$secret);
+      	  	  $user  = isset($param[0])?$param[0]:'';
+      	  	  $pass  = isset($param[1])?$param[1]:'';
+      	  	  $url   = $protocol.'://'.$ip.':'.$port.'/cgi-bin/api.cgi?cmd=Snap&channel=0&rs='.time().'&user='.$user.'&password='.$pass;
+      	  	  $secret='';
+      	  	}
             break;
           case 'virtual':
           default:
             $url = $protocol.'://'.$ip;
       	}
       	$ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_USERPWD, $secret);
+      	if ($secret!='')
+          curl_setopt($ch, CURLOPT_USERPWD, $secret);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);

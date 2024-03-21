@@ -45,8 +45,8 @@ class Webcam extends Controller {
   function live($st,$parameter='') {
     $param = array_map('trim',explode('.',$parameter));
     $size = $this->check_size(!isset($param[0]) || empty($param[0])?'640x480':$param[0]);
-  	$this->view->autostart = !isset($param[1]) || $param[1]==''?0:$param[1]=='1'?1:0;
-    $this->view->print_information = count($param)>2?isset($param[2])?$param[2]=='1'?1:0:0:0;
+  	$this->view->autostart = !isset($param[1]) || $param[1]==''?0:($param[1]=='1'?1:0);
+    $this->view->print_information = count($param)>2?(isset($param[2])?($param[2]=='1'?1:0):0):0;
     
     $dirname = _SHORT_DIR_.'/'.$st;
   	if ($st!='' && is_dir($dirname)) {

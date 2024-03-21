@@ -10,6 +10,7 @@
     const MOBOTIX2M = 'm26m';
     const MOBOTIX2D = 'm15d';
     const AXIS      = 'axis';
+    const REOLINK   = 'reolink';
 
     public static $profiles = array( APIType::MOBOTIX => array( 'QXGA' => array('2048x1536','live'),
                                                                 'MEGA' => array('1280x960','live'),
@@ -41,6 +42,9 @@
                                                               'SVGA' => array('800x600','live'),
                                                               'VGA' => array('640x480','live'),
                                                               'CIF' => array('320x240','live')
+                                                             ),
+                                     APIType::REOLINK => array ( '4K' => array('3840x2160','live'),
+                                                              'HD' => array('1920x1080','live')
                                                              )
                                    );
 
