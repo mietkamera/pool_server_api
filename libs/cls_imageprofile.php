@@ -51,7 +51,7 @@
     public static function best_fitting_profile($type,$size) {
       $dimension = explode('x',$size);
       $width  = isset($dimension[0])?intval($dimension[0]):320;
-      $height = isset($dimension[1])?intval($dimension[1]):is_int($width*3/4)?$width*3/4:intval($width*9/16);
+      $height = isset($dimension[1])?intval($dimension[1]):(is_int($width*3/4)?$width*3/4:intval($width*9/16));
       $profile = array_key_first(self::$profiles[$type]);
       $found  = false;
       foreach(self::$profiles[$type] as $key => $value) {
