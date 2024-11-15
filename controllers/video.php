@@ -171,7 +171,7 @@ class Video extends Controller {
     if ($size && $handle) {
       header("Content-type: {$size['mime']}");
       header("Content-Length: " . filesize($filename));
-      header("Content-Disposition: attachment; filename=".$st.'_'.$parameter.'.m4v');
+      header("Content-Disposition: attachment; filename=".$st.'_'.$parameter.'.mp4');
       header('Content-Transfer-Encoding: binary');
       header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
