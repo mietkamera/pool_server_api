@@ -52,7 +52,7 @@
       
       $module    = $url[0];
       $method    = empty($url[1])?'help':$url[1];
-      $shorttag  = empty($url[2])?'':$url[2];
+      $shorttag  = empty($url[2])?'':substr($url[2],0,_DEFAULT_SHORTTAG_LENGTH_);
       $parameter = !isset($url[3])?'':$url[3];
 
       if (!$validip && $module!='login' && $module!='publish') {

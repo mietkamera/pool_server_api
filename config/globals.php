@@ -12,9 +12,9 @@
 	// In welchem Unterverzeichnis des Servers ist die 
 	// Anwendung installiert ?
 	define('_URL_STUB_','');
+	define('_DEFAULT_SHORTTAG_LENGTH_',6);
 	define('_SHORT_DIR_','/var/www/short');
 	define('_MRTG_DIR_','/var/www/mrtg');
-	define('_XML_FILE_','../webcam.xml');
 	
 	define('_DEFAULT_IMAGE_SIZE_','2048x1536');
 

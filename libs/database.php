@@ -27,9 +27,28 @@ class Database {
 				  break;
 				}
 			}
-		} catch (Exception $e) {
-			
-			die('error in database operation');
+		} catch (PDOException $e) {
+			$error= $e->getMessage();
+			die('error in database operation: '.$error);
+		}
+
+		return $result;
+	}
+
+	public function is_valid_admin_login($email,$password) {
+
+		$result = false;
+
+		try {
+			$stmt = $this->pdo->prepare('SELECT * FROM users WHERE user_email=:email');
+			$stmt->execute(array(':email'=>$email));
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+        	if ($row['user_password']==md5($password)){
+          		$result = true;
+        	}
+		} catch (PDOException $e) {
+			$error= $e->getMessage();
+			die('error in database operation: '.$error);
 		}
 
 		return $result;
