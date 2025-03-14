@@ -1,6 +1,6 @@
 <?php
 
-require 'globals.php';
+require 'config/globals.php';
 
 class Model {
   

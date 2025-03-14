@@ -1,3 +1,3 @@
-personal.php
-dbconfig.php
+config/personal.php
+config/dbconfig.php
 .htaccess

@@ -7,9 +7,9 @@ require 'libs/view.php';
 require 'libs/database.php';
 require 'libs/helpers.php';
 
-require 'dbconfig.php';
-require 'globals.php';
-require 'personal.php';
+require 'config/dbconfig.php';
+require 'config/globals.php';
+require 'config/personal.php';
 
 $app = new Bootstrap;
 

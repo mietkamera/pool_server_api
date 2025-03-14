@@ -2,8 +2,8 @@
 
   session_start();
   
-  require '../globals.php';
-  require '../dbconfig.php';
+  require '../config/globals.php';
+  require '../config/dbconfig.php';
  
 
   $shorttag = isset($_POST['shorttag'])?strtolower(trim($_POST['shorttag'])):'';
