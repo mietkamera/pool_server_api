@@ -5,20 +5,21 @@
   	  
   	  session_start();
   	  
-  	  $this->db = new Database;
-      // von welchen URLs aus kann man ohne Passwort Daten abrufen 
-      $validip = false;
-      $iprecord = $this->db->query('SELECT path FROM valid_ips WHERE ip="'.$_SERVER['REMOTE_ADDR'].'"');
-      if (isset($iprecord)) {
-      	foreach($iprecord as $record) {
-      	  if (strpos($_GET['url'],$record['path']) !== false) {
-      	    $validip = true;
-      	    break;
-      	  }
-      	}
+      // sanitize $_GET variable url
+      $sanitized_url = rtrim((isset($_GET['url'])?$_GET['url']:null),'/');
+
+      if (!preg_match('/^[a-zA-Z0-9-_:.\/]+$/', $sanitized_url)) {
+        require 'controllers/error.php';
+        $controller = new MyError();
+        $controller->page('400');
+        return false;
       }
+
+      // von welchen URLs aus kann man ohne Passwort Daten abrufen 
+  	  $this->dbc = new Database;      
+      $validip = $this->dbc->is_valid_ip($sanitized_url);
       
-      $url = explode('/',rtrim((isset($_GET['url'])?$_GET['url']:null),'/'));
+      $url = explode('/',$sanitized_url);
 
       if (empty($url[0])) {
         require 'controllers/index.php';
@@ -26,14 +27,6 @@
         $controller->index();
         return false;
       }
-
-      if (!preg_match('/^[a-zA-Z0-9-_]+$/', $url[0])) {
-        require 'controllers/error.php';
-        $controller = new MyError();
-        $controller->page('400');
-        return false;
-      }
-      
       
   	  $file = 'controllers/'.$url[0].'.php';
 
