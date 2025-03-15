@@ -1,8 +1,9 @@
 <?php
 
   session_start();
-  $shorttag = isset($_POST['shorttag'])?trim($_POST['shorttag']):'';
+  $shorttag = isset($_POST['shorttag'])?trim($_POST['shorttag']):(isset($_GET['shorttag'])?$_GET['shorttag']:'');
   
+  $destroy = false;
   if ($shorttag!='') {
     if (isset($_SESSION['session_'.$shorttag])) {
       unset($_SESSION['session_'.$shorttag]);

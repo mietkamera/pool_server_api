@@ -2,6 +2,7 @@
   <div class="signin-form">
     <div class="container">
       <form class="form-signin" method="post" id="loginForm">
+        <input type="hidden" id="token" name="token" value="<?php echo $_SESSION['token'];?>">
         <img class="float-left" src="<?php echo _URL_STUB_?>/public/images/favicon-32x32.png">
         <h2 class="form-signin-heading">&nbsp;mietkamera.de</h2><hr />
         <div id="info">
@@ -98,7 +99,7 @@ if ($this->shorttag!='') { ?>
   		  $("#btn-login").html('<i class="fas fa-exchange-alt"></i>&nbsp;Sende Anfrage ...');
   		},
   		success : function(response) { 
-  		    if(response=="ok") {
+  		  if(response.returncode==200) {
   			  $("#btn-login").html('<img src="' + url_stub + '/public/images/btn-ajax-loader.gif" /> &nbsp; Anmelden ...');
   			  <?php if ($this->redirect=='') { ?>
   			  setTimeout('window.location.href = "<?php echo $_SERVER['HTTP_REFERER'];?>";',1000);
@@ -106,8 +107,9 @@ if ($this->shorttag!='') { ?>
   			  setTimeout('window.location.href = "<?php echo _URL_STUB_.'/'.$this->redirect;?>"; ',1000);
   			  <?php } ?>
   			} else {
-  			  $("#error").fadeIn(1000, function(){      
-  			    $("#error").html('<div class="alert alert-danger"><i class="fas fa-info"></i>&nbsp;'+ response + ' !</div>');
+  			  $("#error").fadeIn(1000, function() {      
+  			    $("#error").html('<div class="alert alert-danger"><i class="fas fa-info"></i><b>&nbsp;'+ 
+                response.message + ' !</b></div>');
   				$("#btn-login").html('<i class="fas fa-sign-in-alt"></i>&nbsp;Anmelden');
   			  });
   			}

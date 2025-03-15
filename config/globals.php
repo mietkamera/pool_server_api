@@ -13,6 +13,7 @@
 	// Anwendung installiert ?
 	define('_URL_STUB_','');
 	define('_DEFAULT_SHORTTAG_LENGTH_',6);
+	define('_MAX_LOGIN_ATTEMPTS_',5);
 	define('_SHORT_DIR_','/var/www/short');
 	define('_MRTG_DIR_','/var/www/mrtg');
 	

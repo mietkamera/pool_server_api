@@ -4,11 +4,16 @@
   	function __construct() {
   	  
   	  session_start();
-  	  
+
+      // this is a get method call of the website
+      // we use this session vars to implement a simple csrf token mechanism 
+  	  $_SESSION['token'] = bin2hex(random_bytes(32));
+      $_SESSION['token-expire'] = time() + 60 * 60;
+
       // sanitize $_GET variable url
       $sanitized_url = rtrim((isset($_GET['url'])?$_GET['url']:null),'/');
-
-      if (!preg_match('/^[a-zA-Z0-9-_:.\/]+$/', $sanitized_url)) {
+      
+      if (!is_null($sanitized_url) && $sanitized_url!='' && !preg_match('/^[a-zA-Z0-9-_:.\/]+$/', $sanitized_url)) {
         require 'controllers/error.php';
         $controller = new MyError();
         $controller->page('400');
