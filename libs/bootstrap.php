@@ -2,6 +2,14 @@
   class Bootstrap {
   	
   	function __construct() {
+      session_set_cookie_params([
+        'lifetime' => 60 * 60,
+        'path' => '/',
+        'domain' => $_SERVER['SERVER_NAME'],
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+      ] );
   	  
   	  session_start();
 
@@ -61,13 +69,12 @@
       $parameter = !isset($url[3])?'':$url[3];
 
       if (!$validip && $module!='login' && $module!='publish') {
-        if ($shorttag!='' && is_file(_SHORT_DIR_.'/'.$shorttag.'/.password') && 
-                 (strpos(file_get_contents(_SHORT_DIR_.'/'.$shorttag.'/.password'),'user:') !== false) &&
-                 !(isset($_SESSION['session_'.$shorttag]) || isset($_SESSION['session_admin'])) ) {
+        if (shorttag_needs_login($shorttag) &&
+                 !(shorttag_is_logged_in($shorttag) || admin_is_logged_in()) ) {
           // Falls die login-Methode nicht direkt aufgerufen wird,
           // Basteln wir uns die redirect-URL aus der $_GET['url']-Variable
           require 'controllers/login.php';
-    	  $controller = new Login();
+    	    $controller = new Login();
       	  $controller->auth($shorttag,$_GET['url']);
       	  return false;
         }

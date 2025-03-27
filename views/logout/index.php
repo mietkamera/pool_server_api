@@ -2,6 +2,7 @@
   $destroy = false;
   $shorttag = $this->shorttag;
   $redirect = $this->redirect;
+  
   if ($shorttag!='') {
     if (isset($_SESSION['session_'.$shorttag])) { 
 	  unset($_SESSION['session_'.$shorttag]);

@@ -20,8 +20,10 @@
   }
   if($destroy) { 
     session_destroy();
-    echo "ok";
+    $data = array('returncode'=>200,'message'=>'session destroyed');
   } else { 
-    echo "failed";
+    $data = array('returncode'=>500,'message'=>'no session destroyed');
   }
+  echo json_encode($data);
+  return false;
 ?>
