@@ -3,7 +3,7 @@
   session_start();
 
   require '../config/globals.php';
-  require '../config/dbconfig.php';
+  require '../libs/database.php';
  
   $data = array('returncode'=>500,'message'=>'bad request');
 
@@ -24,24 +24,32 @@
       // but next login from this session needs a csrf token (mietkamera.de javascript from inbetriebnahme)
       $_SESSION['token'] = bin2hex(random_bytes(32));
       $_SESSION['token-expire'] = time() + 60 * 60;
+      // error_log('login: dont need csrf validation');
       break;
     }
+  }
+  $dbc = new Database;
+  if ($dbc->is_valid_ip('/ajax/login')) {
+    $need_csrf_validation = false;
+    // error_log('login: dont need csrf validation (database)');
   }
 
   // first handle the csrf stuff
   if ($need_csrf_validation) {
+    // error_log('login: need csrf validation');
     $error_count = 0;
     if (!isset($_POST['token'])) $error_count++;
     if (!isset($_SESSION['token'])) $error_count++;
     if ($error_count == 0) {
       $token = filter_var($_POST['token'],FILTER_SANITIZE_STRING); 
+      // error_log('token='.$token);
       if ($token !== $_SESSION['token']) { $error_count++; } else {
         if (!isset($_SESSION['token-expire'])) { $error_count++; } else { 
           if ($_SESSION['token-expire'] < time()) $error_count++; 
         }
       };
-
     }
+
     // if ($error_count > 0) {
     //   header('Content-Type: application/json; charset=utf-8');
     //   echo json_encode($data);
