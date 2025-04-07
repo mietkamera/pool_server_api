@@ -133,7 +133,7 @@ class Model {
 	      }
 	      if (sizeof($images)>0) {
 	  	    sort($images);
-  	        // schreibe die Cache-Files
+  	        // schreibe!!! die Cache-Files
   	        file_put_contents($image_cache,$images);
   	        if (!is_link($image_first)) {
   	          $first = $image_dir.'/'.$images[0];

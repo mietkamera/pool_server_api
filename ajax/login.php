@@ -10,9 +10,20 @@
   // if login comes from our websites, you don't need csrf token
   $need_csrf_validation = true;
   $valid_url_without_csrf_token = array('mietkamera.de','136.243.113.83','192.168.122.83');
+  if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+    $ip = $_SERVER['HTTP_CLIENT_IP'];
+  } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+  } else {
+    $ip = $_SERVER['REMOTE_ADDR'];
+  }
+  error_log('login from: '.$ip);
   foreach($valid_url_without_csrf_token as $url) {
-    if (str_contains($_SERVER['REMOTE_ADDR'],$url)) {
+    if (str_contains($ip,$url)) {
       $need_csrf_validation = false;
+      // but next login from this session needs a csrf token (mietkamera.de javascript from inbetriebnahme)
+      $_SESSION['token'] = bin2hex(random_bytes(32));
+      $_SESSION['token-expire'] = time() + 60 * 60;
       break;
     }
   }
@@ -31,11 +42,11 @@
       };
 
     }
-    if ($error_count > 0) {
-      header('Content-Type: application/json; charset=utf-8');
-      echo json_encode($data);
-      return false;
-    }
+    // if ($error_count > 0) {
+    //   header('Content-Type: application/json; charset=utf-8');
+    //   echo json_encode($data);
+    //   return false;
+    // }
   
     // handle dos attacks
     if (!isset($_SESSION['login_count'])) $_SESSION['login_count'] = 0;
