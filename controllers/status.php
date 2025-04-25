@@ -48,6 +48,10 @@ class Status extends Controller {
       $returncode = "200";
       $message    = "Shorttag gefunden";
       switch ($status) {
+        case "ready":
+          $short       = "offline";
+          $description = "Die Kamera ist bereit";
+          $color       = "info";
         case "ok":
           $short       = "online";
           $description = "Die Kamera liefert Bilder";
