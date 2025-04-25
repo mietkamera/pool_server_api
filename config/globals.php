@@ -4,7 +4,9 @@
  	
  	define('_VERSION_','1.0');
  	
-	 // Global Definitions
+	define('_NEED_CSRF_VALIDATION_',false);
+	
+	// Global Definitions
 	define('_SUCCESS_', 0);
 	define('_ERROR_', 1);
 	define('_INFO_', 2);

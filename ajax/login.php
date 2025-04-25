@@ -8,7 +8,7 @@
   $data = array('returncode'=>500,'message'=>'bad request');
 
   // if login comes from our websites, you don't need csrf token
-  $need_csrf_validation = true;
+  $need_csrf_validation = _NEED_CSRF_VALIDATION_;
   $valid_url_without_csrf_token = array('mietkamera.de','136.243.113.83','192.168.122.83');
   if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ip = $_SERVER['HTTP_CLIENT_IP'];
