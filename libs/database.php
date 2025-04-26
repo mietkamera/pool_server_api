@@ -8,9 +8,7 @@ class Database
 	public function __construct()
 	{
 
-		require __DIR__.'/../config/dbconfig.php';
-
-		$this->pdo = new PDO("mysql:host={$db_host};dbname={$db_name}", $db_user, $db_pass);
+		$this->pdo = new PDO("mysql:host="._DB_HOST_.";dbname="._DB_NAME_, _DB_USER_, _DB_PASS_);
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 	}

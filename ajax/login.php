@@ -3,6 +3,7 @@
   session_start();
 
   require '../config/globals.php';
+  require '../config/dbconfig.php';
   require '../libs/database.php';
  
   $data = array('returncode'=>500,'message'=>'bad request');
