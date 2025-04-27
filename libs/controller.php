@@ -5,6 +5,7 @@ class Controller
   protected $view;
   protected $help;
   protected $model;
+  protected $httpRoot;
 
   protected function __construct()
   {

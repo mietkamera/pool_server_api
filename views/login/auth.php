@@ -29,7 +29,7 @@
              <i class="fas fa-sign-in-alt"></i>&nbsp;</span>&nbsp;Anmelden
            </button>
          </div>
-         <div class="form-group form-check" id="form-a">
+         <div class="form-group form-check d-none" id="form-a">
    	       <?php if ($this->shorttag!='') { ?>
    	       <input type="checkbox" class="filled-in form-check-input" name="asadmin" id="asadmin" value="normal">
            <label for="asadmin" class="disabled form-check-label">Als Administrator anmelden</label>

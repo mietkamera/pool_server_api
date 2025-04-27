@@ -3,7 +3,7 @@
  if(!defined('_GLOBALS_')) {
  	
  	define('_VERSION_','1.0');
- 	
+ 	define('_DEBUG_LOG_',true);
 	define('_NEED_CSRF_VALIDATION_',false);
 	
 	// Global Definitions

@@ -1,5 +1,5 @@
   <div class="container mt-3">
     <p class="lead">ERROR 400</p>
-    <h3>Ung&uuml;ltige Eingabedaten in der URL</h3>
-    <p>Die URL enth&auml;lt unerlaubte Zeichen - zum Beispiel Quotes, Semicola oder Backslashes.</p>
+    <h3>Bad URL</h3>
+    <p>This URL contains forbidden characters - e.g. quotes, semicola or back slashes.</p>
   </div>

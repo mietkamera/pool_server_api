@@ -33,5 +33,5 @@
       return $result;
     }
 
-  } else define('_HELPERS_');
+  } else define('_HELPERS_',0);
 ?>
