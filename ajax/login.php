@@ -20,7 +20,7 @@
   }
   error_log('login from: '.$ip);
   foreach($valid_url_without_csrf_token as $url) {
-    if (str_contains($ip,$url)) {
+    if (strpos($ip,$url)!==false) {
       $need_csrf_validation = false;
       // but next login from this session needs a csrf token (mietkamera.de javascript from inbetriebnahme)
       $_SESSION['token'] = bin2hex(random_bytes(32));
