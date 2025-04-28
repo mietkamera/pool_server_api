@@ -1,10 +1,10 @@
 <?php
 class Bootstrap
 {
-  private $dbc;
+
   private $module, $method, $shorttag, $parameter;
 
-  function __construct()
+  public function __construct()
   {
     session_set_cookie_params([
       'lifetime' => 60 * 60,
@@ -22,44 +22,26 @@ class Bootstrap
     $_SESSION['token'] = bin2hex(random_bytes(32));
     $_SESSION['token-expire'] = time() + 60 * 60;
 
-    $this->dbc = new Database;
+    $access = new Access();
 
-    if ($this->getStartFromIP() == null)
-      if ($this->getMyRemoteIP() != null)
-        $this->setStartFromIP();
-      else {
-        if (_DEBUG_LOG_)
-          error_log('myRemoteIP == null');
-        $this->exitWithError(500);
-      }
-    if (_DEBUG_LOG_) {
-      error_log('startFromIP: ' . $this->getStartFromIP());
-      error_log('myRemoteIP: ' . $this->getMyRemoteIP());
+    // set the calling IP in session
+    if (!$access::setSessionIPs()) {
+      if (_DEBUG_LOG_)
+        error_log('myRemoteIP == null');
+      $this->exitWithError(500);
     }
 
     // sanitize $_GET variable url
     $sanitized_url = rtrim((isset($_GET['url']) ? $_GET['url'] : null), '/');
-    if (!is_null($sanitized_url) && $sanitized_url != '' && !preg_match('/^[a-zA-Z0-9-_:.\/]+$/', $sanitized_url)) {
+    if ($sanitized_url !== null && $sanitized_url != '' && !preg_match('/^[a-zA-Z0-9-_:.\/]+$/', $sanitized_url)) {
       $this->exitWithError(400);
     }
 
     // check if you call this API from an IP that has access without login
     // (this is not the IP that started the session)
     // we use this to grant access to the API to our management server
-    $noLoginFromIPRequired = $this->dbc->noLoginRequiredFromIP($this->getMyRemoteIP(), $sanitized_url);
+    $noLoginFromIPRequired = $access::noLoginRequiredFromIP($sanitized_url);
 
-    if (!$noLoginFromIPRequired) {
-      if (_DEBUG_LOG_)
-        error_log('if needed you have to login from ' . $this->getMyRemoteIP());
-      // if usage of the API is not allowed from all IP or your IP that
-      // started the session is not in the allowed list, your request stops here 
-      if (!($this->publicUsageAllowed() || $this->isStartedFromValidIP())) {
-        if (_DEBUG_LOG_)
-          error_log('there is no public usage and you did not start session from allowed ip');
-        // usage from this ip is not allowed
-        $this->exitWithError(403);
-      }
-    }
 
     // even if $sanitzed_url is null, explode gives back an array
     $url = explode('/', $sanitized_url);
@@ -98,8 +80,22 @@ class Bootstrap
     $this->shorttag = empty($url[2]) ? '' : substr($url[2], 0, _DEFAULT_SHORTTAG_LENGTH_);
     $this->parameter = !isset($url[3]) ? '' : $url[3];
 
+    if (isset($_SESSION['session_' . $this->shorttag]))
+      $access::unsetTempAllowedIP();
+    else
+      if (!$noLoginFromIPRequired) {
+        // if usage of the API is not allowed from all IP or your IP that
+        // started the session is not in the allowed list, your request stops here 
+        if (!($access::publicUsageAllowed() || $access::usageAllowedFromIP())) {
+          if (_DEBUG_LOG_)
+            error_log('there is no public usage and you did not start session from allowed ip');
+          // usage from this ip is not allowed
+          $this->exitWithError(403);
+        }
+      }
+
     // open login if required
-    if ($this->loginRequired() && !$noLoginFromIPRequired) {
+    if ($access::loginRequired($this->shorttag) && !$noLoginFromIPRequired) {
       if (_DEBUG_LOG_)
         error_log('login for ' . $this->shorttag . ' required');
       if ($this->module != 'login') {
@@ -111,6 +107,13 @@ class Bootstrap
     } else {
       if (_DEBUG_LOG_)
         error_log('no login required');
+      // sessions vars have to be set
+      if (!isset($_SESSION['session_' . $this->shorttag])) {
+        $_SESSION['session_' . $this->shorttag . '_type'] = 'user';
+        $_SESSION['session_' . $this->shorttag] = rand();
+        if (_DEBUG_LOG_)
+          error_log('nevertheless set session_' . $this->shorttag . ' variable');
+      }
       if ($this->module == 'login') {
         if (_DEBUG_LOG_)
           error_log('load project website');
@@ -136,48 +139,7 @@ class Bootstrap
       $this->exitWithError(404);
   }
 
-  private function getMyRemoteIP()
-  {
-    $ip = null;
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-      $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-      $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
-  }
-  // get the ip from the session
-  private function getStartFromIP()
-  {
-    return isset($_SESSION['startFromIP']) ? $_SESSION['startFromIP'] : null;
-  }
 
-  // save the remote ip in the session
-  private function setStartFromIP()
-  {
-    $ip = $this->getMyRemoteIP();
-    if (!isset($_SESSION['startFromIP']) && $ip != null)
-      $_SESSION['startFromIP'] = $ip;
-    return $ip;
-  }
-
-  private function isStartedFromValidIP()
-  {
-    return $this->dbc->usageAllowedFromIP($this->getStartFromIP());
-  }
-
-  private function publicUsageAllowed()
-  {
-    if (defined('_PUBLIC_USAGE_'))
-      return _PUBLIC_USAGE_;
-    else {
-      if (_DEBUG_LOG_)
-        error_log('no public usage defined! Fall back to false');
-      return false;
-    }
-  }
   private function exitWithError($code = 500)
   {
     require 'controllers/error.php';
@@ -195,23 +157,5 @@ class Bootstrap
     exit;
   }
 
-  // if shorttag directory contains a password file with a user entry
-  // and this shorttag has no session entry and no admin is logged in
-  private function loginRequired()
-  {
-    $result = false;
-    if (
-      is_string($this->shorttag) &&
-      strlen($this->shorttag) == _DEFAULT_SHORTTAG_LENGTH_
-    ) {
-      if (
-        is_file(_SHORT_DIR_ . '/' . $this->shorttag . '/.password') &&
-        (strpos(file_get_contents(_SHORT_DIR_ . '/' . $this->shorttag . '/.password'), 'user:') !== false) &&
-        (!isset($_SESSION['session_' . $this->shorttag])) &&
-        (!isset($_SESSION['session_admin']))
-      )
-        $result = true;
-    }
-    return $result;
-  }
+
 }

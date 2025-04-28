@@ -1,12 +1,12 @@
       <div class="container">
         <div class="row ">
           <div class="col">
-            <h1>Fehlermeldung</h1>
+            <h1>Error message</h1>
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <p class="lead mb-4">Da ist was schief gelaufen...</p>
+            <p class="lead mb-4">Something went wrong...</p>
           </div>
         </div>
       </div>

@@ -10,12 +10,14 @@ class Logout extends Controller
 
 	public function index($st)
 	{
+		$access = new Access();
 		if (isset($_SESSION['session_' . $st])) {
 			unset($_SESSION['session_' . $st]);
 			session_destroy();
-			$data = array('returncode' => 200, 'message' => 'session destroyed');
+			$access::unsetTempAllowedIP();
+			$data = ['returncode' => 200, 'message' => 'session destroyed'];
 		} else
-			$data = array('returncode' => 500, 'message' => 'no session destroyed');
+			$data = ['returncode' => 500, 'message' => 'no session destroyed'];
 		header('Content-type:application/json;charset=utf-8');
 		echo json_encode($data);
 	}
