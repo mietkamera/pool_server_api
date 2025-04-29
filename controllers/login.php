@@ -6,6 +6,18 @@ class Login extends Controller {
     parent::__construct();
   }
 
+  public function check_status($st) {
+    if (shorttag_needs_login($st)) { 
+      if (shorttag_is_logged_in($st)) 
+        $data = ['returncode' => 200, 'message' => '[' . $st . '] is logged in'];
+      else
+        $data = ['returncode' => 300, 'message' => '[' . $st . '] is not logged in'];
+    } else
+      $data = ['returncode' => 200, 'message' => '[' . $st . '] no login required'];
+    header('Content-Type: application/json');
+    echo json_encode($data);
+  }
+
   //
   // Ist der Shorttag gültig und wenn ja wird ein Passwort benötigt ?
   //
