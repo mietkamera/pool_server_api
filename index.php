@@ -5,7 +5,7 @@ require 'config/globals.php';
 require 'config/personal.php';
 
 require 'libs/database.php';
-require 'libs/access.php';
+require 'libs/clientsession.php';
 
 require 'libs/bootstrap.php';
 require 'libs/controller.php';
