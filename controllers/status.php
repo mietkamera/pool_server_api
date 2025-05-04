@@ -49,9 +49,10 @@ class Status extends Controller {
       $message    = "Shorttag gefunden";
       switch ($status) {
         case "ready":
-          $short       = "offline";
-          $description = "Die Kamera ist bereit";
+          $short       = "standby";
+          $description = "Die Kamera ist im Standby";
           $color       = "info";
+          break;
         case "ok":
           $short       = "online";
           $description = "Die Kamera liefert Bilder";

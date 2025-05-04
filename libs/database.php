@@ -47,24 +47,26 @@ class Database
 		return $result;
 	}
 
-	public function setTempAllowedIP($ip) {
+	public function setTempAllowedIP($ip)
+	{
 		try {
 			$stmt = $this->pdo->prepare('INSERT INTO allow_usage_from (ip,description) VALUES(:ip,"from login script")');
 			$stmt->execute([':ip' => $ip]);
 			if (_DEBUG_LOG_)
-			error_log('set temporary allowed ip: '.$ip);
+				error_log('set temporary allowed ip: ' . $ip);
 		} catch (PDOException $e) {
 			$error = $e->getMessage();
 			die('error in database operation: ' . $error);
 		}
 	}
 
-	public function unsetTempAllowedIP($ip) {
+	public function unsetTempAllowedIP($ip)
+	{
 		try {
 			$stmt = $this->pdo->prepare('DELETE FROM allow_usage_from WHERE ip=:ip AND tmp=TRUE');
 			$stmt->execute([':ip' => $ip]);
 			if (_DEBUG_LOG_)
-			error_log('unset temporary allowed ip: '.$ip);
+				error_log('unset temporary allowed ip: ' . $ip);
 		} catch (PDOException $e) {
 			$error = $e->getMessage();
 			die('error in database operation: ' . $error);

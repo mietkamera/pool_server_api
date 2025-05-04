@@ -5,17 +5,17 @@ session_start();
 require '../config/globals.php';
 require '../config/dbconfig.php';
 require '../libs/database.php';
-require '../libs/access.php';
+require '../libs/session.php';
 
 $data = ['returncode' => 500, 'message' => 'bad request'];
-$access = new Access();
+$sh = new Session();
 
 // if login comes from our websites, you don't need csrf token
 //$need_csrf_validation = _NEED_CSRF_VALIDATION_;
 //$valid_url_without_csrf_token = array('mietkamera.de', '136.243.113.83', '192.168.122.83');
 
 // ip from where this script is called
-$myIP = $access::getMyRemoteIP();
+$myIP = $sh::getSessionIP();
 
 if (_DEBUG_LOG_)
   error_log('login from: ' . $myIP);
@@ -91,25 +91,28 @@ if (_DEBUG_LOG_)
 $st = isset($_POST['shorttag']) ? strtolower(trim($_POST['shorttag'])) : '';
 $shorttag = preg_match('/^[a-zA-Z0-9]+$/', $st) ? substr($st, 0, _DEFAULT_SHORTTAG_LENGTH_) : '';
 $password = isset($_POST['password']) ? trim($_POST['password']) : '';
- 
 
-$data = $access::login($shorttag,$password,'user');
+
+$data = $sh::login($shorttag, $password, 'user');
 
 if ($data['returncode'] == 200) {
-  if(_DEBUG_LOG_) error_log('session var "session_'.$shorttag.'" '.($_SESSION['session_'.$shorttag]===null?'not ':'').'set');
+  if (_DEBUG_LOG_)
+    error_log('session var "session_' . $shorttag . '" ' . ($_SESSION['session_' . $shorttag] === null ? 'not ' : '') . 'set');
   // if login call sends an IP address as POST, it is assumed as the ip from where to make the next login call
-  if (isset($_POST['ip']) && filter_var($_POST['ip'], FILTER_VALIDATE_IP))  {
-    $access::setTempAllowedIP($_POST['ip']);
-  } else  {
+  if (isset($_POST['ip']) && filter_var($_POST['ip'], FILTER_VALIDATE_IP)) {
+    if ($myIP != $_POST['ip'] && $myIP != null)
+      $sh::setTempAllowedIP($_POST['ip']);
+  } else {
     // if a former call made my ip 
-    $access::unsetTempAllowedIP($myIP);
+    if ($myIP != null)
+      $sh::unsetTempAllowedIP($myIP);
   }
   unset($_SESSION['token']);
   unset($_SESSION['token-expire']);
   unset($_SESSION['login-count']);
   if (isset($_SESSION['login-count-expire']))
     unset($_SESSION['login-count-expire']);
-}
+} else $sh::writeErrorLog($data['returncode']);
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($data);
 return false;

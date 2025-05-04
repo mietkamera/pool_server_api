@@ -2,6 +2,7 @@
 
   class Help extends Controller {
   	
+	private $module,$method;
   	function __construct($module='help',$method='index') {
   	  parent::__construct();
   	  $this->module = $module;

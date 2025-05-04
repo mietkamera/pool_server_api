@@ -1,6 +1,6 @@
 <?php
 
-class ClientSession
+class Session
 {
 
     private static $dbc;
@@ -8,10 +8,11 @@ class ClientSession
     public function __construct()
     {
         self::$dbc = new Database();
-
     }
 
-    public static function getMyRemoteIP()
+    // determine client IP from $_SERVER array
+    // this function also works if client connects via proxy
+    public static function clientIP()
     {
         $ip = null;
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -24,46 +25,74 @@ class ClientSession
         return $ip;
     }
 
-    // get the ip from the session
-    private static function getStartFromIP()
+    public static function getSessionIP()
     {
-        return isset($_SESSION['startFromIP']) ? $_SESSION['startFromIP'] : null;
+        return isset($_SESSION['clientIP']) ? $_SESSION['clientIP'] : null;
     }
 
-    // save the remote ip in the session
-    private static function setStartFromIP()
-    {
-        $ip = self::getMyRemoteIP();
-        if (!isset($_SESSION['startFromIP']) && $ip != null)
-            $_SESSION['startFromIP'] = $ip;
-        return $ip;
-    }
-
-    public static function usageAllowedFromIP()
-    {
-        return self::$dbc->usageAllowedFromIP(self::getStartFromIP());
-    }
-
-    public static function setSessionIPs()
+    // when starting init session with the clientIP
+    public static function init()
     {
         $result = false;
-        if (self::getStartFromIP() == null) {
-            if (self::getMyRemoteIP() != null) {
-                self::setStartFromIP();
+        if (self::getSessionIP() == null) {
+            if (self::clientIP() != null) {
+                $_SESSION['clientIP'] = self::clientIP();
                 $result = true;
             }
         } else
             $result = true;
         if (_DEBUG_LOG_ && $result) {
-            error_log('startFromIP: ' . self::getStartFromIP());
-            error_log('myRemoteIP: ' . self::getMyRemoteIP());
+            error_log('SESSION["clientIP"]: ' . self::getSessionIP());
         }
         return $result;
     }
 
+    public static function logout()
+    {
+        if (isset($_SESSION['clientIP']))
+            unset($_SESSION['clientIP']);
+    }
+
+    public static function isLoggedIn($shorttag)
+    {
+        return isset($_SESSION['session_' . $shorttag]);
+    }
+
+    public static function isValidShorttag($shorttag)
+    {
+        $result = false;
+        if (
+            is_string($shorttag) &&
+            strlen($shorttag) == _DEFAULT_SHORTTAG_LENGTH_ &&
+            is_dir(_SHORT_DIR_ . '/' . $shorttag)
+        )
+            $result = true;
+        return $result;
+    }
+
+    // if shorttag directory contains a password file with a user entry
+    // and this shorttag has no session entry and no admin is logged in
+    public static function isLoginRequired($shorttag)
+    {
+        $result = false;
+        if (
+            self::isValidShorttag($shorttag) &&
+            is_file(_SHORT_DIR_ . '/' . $shorttag . '/.password') &&
+            (strpos(file_get_contents(_SHORT_DIR_ . '/' . $shorttag . '/.password'), 'user:') !== false)
+        )
+            $result = true;
+        return $result;
+    }
+
+    public static function usageAllowedFromIP()
+    {
+        return self::$dbc->usageAllowedFromIP(self::getSessionIP());
+    }
+
+
     public static function noLoginRequiredFromIP($url)
     {
-        return self::$dbc->noLoginRequiredFromIP(self::getMyRemoteIP(), $url);
+        return self::$dbc->noLoginRequiredFromIP(self::clientIP(), $url);
     }
 
     public static function publicUsageAllowed()
@@ -77,25 +106,6 @@ class ClientSession
         }
     }
 
-    // if shorttag directory contains a password file with a user entry
-    // and this shorttag has no session entry and no admin is logged in
-    public static function loginRequired($shorttag)
-    {
-        $result = false;
-        if (
-            is_string($shorttag) &&
-            strlen($shorttag) == _DEFAULT_SHORTTAG_LENGTH_
-        ) {
-            if (
-                is_file(_SHORT_DIR_ . '/' . $shorttag . '/.password') &&
-                (strpos(file_get_contents(_SHORT_DIR_ . '/' . $shorttag . '/.password'), 'user:') !== false) &&
-                !isset($_SESSION['session_' . $shorttag]) &&
-                !isset($_SESSION['session_admin'])
-            )
-                $result = true;
-        }
-        return $result;
-    }
 
     public static function login($shorttag, $password, $type = 'user')
     {
@@ -109,7 +119,7 @@ class ClientSession
                     if ($typ == $type) {
                         $found_user = true;
                         if (md5($password) == $pass || $password == $pass) {
-                            $data = array('returncode' => 200, 'message' => 'login successful');
+                            $data = ['returncode' => 200, 'message' => 'login successful'];
                             $_SESSION['session_' . $shorttag . '_type'] = $typ;
                             $_SESSION['session_' . $shorttag] = rand();
                         } else {
@@ -119,20 +129,20 @@ class ClientSession
                     }
                 }
                 if (!$found_user && $password == '') {
-                    $data = array('returncode' => 200, 'message' => 'login successful');
+                    $data = ['returncode' => 200, 'message' => 'login successful'];
                     $_SESSION['session_' . $shorttag . '_type'] = $typ;
                     $_SESSION['session_' . $shorttag] = rand();
                 }
             } else {
                 if ($password == '') {
-                    $data = array('returncode' => 200, 'message' => 'login successful');
+                    $data = ['returncode' => 200, 'message' => 'login successful'];
                     $_SESSION['session_' . $shorttag . '_type'] = 'user';
                     $_SESSION['session_' . $shorttag] = rand();
                 }
             }
         } else {
             if (_DEBUG_LOG_)
-                error_log('shorttag error 403 from ' . self::getMyRemoteIP());
+                error_log('shorttag error 403 from ' . self::clientIP());
             $data = ['returncode' => 500, 'message' => 'no shorttag directory'];
         }
         return $data;
@@ -141,14 +151,28 @@ class ClientSession
     public static function setTempAllowedIP($ip)
     {
         return self::$dbc->setTempAllowedIP($ip);
+        if (_DEBUG_LOG_)
+            error_log('setTempAllowedIP: ' . $ip);
     }
 
     public static function unsetTempAllowedIP($ip = '')
     {
         if ($ip == '')
-            return self::$dbc->unsetTempAllowedIP(self::getMyRemoteIP());
+            return self::$dbc->unsetTempAllowedIP(self::clientIP());
         else
             return self::$dbc->unsetTempAllowedIP($ip);
+    }
+
+    public static function writeErrorLog($code)
+    {
+        date_default_timezone_set('Europe/Berlin');
+        $date = new DateTime();
+        $date_human = $date->format("d-M-Y H:i:s T");
+
+        $actual_link = "$_SERVER[REQUEST_URI]";
+
+        file_put_contents('/var/log/pool/error.log', '[' . $date_human . '] ' . self::clientIP() . ' "GET ' . $actual_link . ' HTTP/1.1" ' . $code . "\n", FILE_APPEND);
+
     }
 
 }
