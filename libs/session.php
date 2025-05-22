@@ -110,7 +110,7 @@ class Session
     public static function login($shorttag, $password, $type = 'user')
     {
         $data = ['returncode' => 500, 'message' => 'bad data'];
-        if (is_dir(_SHORT_DIR_ . '/' . $shorttag)) {
+        if ($shorttag != '' && is_dir(_SHORT_DIR_ . '/' . $shorttag)) {
             if (is_file(_SHORT_DIR_ . '/' . $shorttag . '/.password')) {
                 $inhalt = explode("\n", file_get_contents(_SHORT_DIR_ . '/' . $shorttag . '/.password'));
                 $found_user = false;

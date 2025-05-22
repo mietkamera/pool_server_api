@@ -1,7 +1,8 @@
 <?php
 
-session_start();
-
+if(!isset($_SESSION)) {
+  session_start();
+}
 require '../config/globals.php';
 require '../config/dbconfig.php';
 require '../libs/database.php';
