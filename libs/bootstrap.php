@@ -13,7 +13,9 @@ class Bootstrap
       'samesite' => 'Strict'
     ]);
 
-    session_start();
+    if(!isset($_SESSION)) {
+      session_start();
+    }
 
     // this is a get method call of the website
     // we use this session vars to implement a simple csrf token mechanism

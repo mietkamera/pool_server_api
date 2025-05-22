@@ -1,7 +1,8 @@
 <?php
 
-  session_start();
-
+  if(!isset($_SESSION)) {
+    session_start();
+  }
   require '../config/globals.php';
   require '../config/dbconfig.php';
   require '../libs/database.php';
@@ -94,7 +95,7 @@
       break;
     case 'normal':
     default:
-      if (is_dir(_SHORT_DIR_.'/'.$shorttag)) {
+      if ($shorttag != '' && is_dir(_SHORT_DIR_.'/'.$shorttag)) {
         if (is_file(_SHORT_DIR_.'/'.$shorttag.'/.password')) {
           $inhalt = explode("\n",file_get_contents(_SHORT_DIR_.'/'.$shorttag.'/.password'));
           $found_user = false;
