@@ -4,6 +4,13 @@ class Bootstrap
 
   public function __construct()
   {
+    //_SAMESITE_COOKIE_DOMAINS_is an array that holds all domains, that can use the PHPSESSID
+    // Don't forget to allow these domains to show the api in an iframe with this .htaccess directive:
+    // Header always set Content-Security-Policy "frame-ancestors 'self' <domain1> <domain2>..."
+    $my_domains = '';
+    foreach(_SAMESITE_COOKIE_DOMAINS_ as $domain)
+      $my_domains .= ','.$domain;
+    
     session_set_cookie_params([
       'lifetime' => 60 * 60,
       'path' => '/',

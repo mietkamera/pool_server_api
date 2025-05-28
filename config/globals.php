@@ -5,6 +5,7 @@
  	define('_VERSION_','1.0');
  	define('_DEBUG_LOG_',true);
 	define('_NEED_CSRF_VALIDATION_',false);
+	define('_SAMESITE_COOKIE_DOMAINS_',['rolix.de','mietkamera.de','portal.mietkamera.de']);
 	
 	// Global Definitions
 	define('_SUCCESS_', 0);
