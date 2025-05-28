@@ -4,6 +4,7 @@
  	
  	define('_VERSION_','1.0');
  	
+	define('_SAMESITE_COOKIE_DOMAINS_',['rolix.de']);
 	define('_NEED_CSRF_VALIDATION_',false);
 	
 	// Global Definitions
