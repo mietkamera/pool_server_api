@@ -8,8 +8,9 @@ class Bootstrap
     // Don't forget to allow these domains to show the api in an iframe with this .htaccess directive:
     // Header always set Content-Security-Policy "frame-ancestors 'self' <domain1> <domain2>..."
     $my_domains = '';
-    foreach(_SAMESITE_COOKIE_DOMAINS_ as $domain)
-      $my_domains .= ','.$domain;
+    if (defined('_SAMESITE_COOKIE_DOMAINS_'))
+      foreach(_SAMESITE_COOKIE_DOMAINS_ as $domain)
+        $my_domains .= ','.trim($domain);
     
     session_set_cookie_params([
       'lifetime' => 60 * 60,
@@ -20,9 +21,9 @@ class Bootstrap
       'samesite' => 'Strict'
     ]);
 
-    if(!isset($_SESSION)) {
+    //if(!isset($_SESSION)) {
       session_start();
-    }
+    //}
 
     // this is a get method call of the website
     // we use this session vars to implement a simple csrf token mechanism
