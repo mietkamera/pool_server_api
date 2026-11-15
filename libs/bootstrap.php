@@ -4,32 +4,25 @@ class Bootstrap
   protected $dbc;
   function __construct()
   {
-    //_SAMESITE_COOKIE_DOMAINS_is an array that holds all domains, that can use the PHPSESSID
-    // Don't forget to allow these domains to show the api in an iframe with this .htaccess directive:
-    // Header always set Content-Security-Policy "frame-ancestors 'self' <domain1> <domain2>..."
-    $my_domains = '';
-    if (defined('_SAMESITE_COOKIE_DOMAINS_'))
-      foreach(_SAMESITE_COOKIE_DOMAINS_ as $domain)
-        $my_domains .= ','.trim($domain);
-    
     session_set_cookie_params([
       'lifetime' => 60 * 60,
       'path' => '/',
-      'domain' => $_SERVER['SERVER_NAME'].$my_domains,
+      'domain' => $_SERVER['SERVER_NAME'],
       'secure' => true,
       'httponly' => true,
-      'samesite' => 'Strict'
+      'samesite' => 'None'  // vulnerable against CSRF attacks
     ]);
 
-    //if(!isset($_SESSION)) {
+    if (!isset($_SESSION)) {
       session_start();
-    //}
-
+    }
     // this is a get method call of the website
     // we use this session vars to implement a simple csrf token mechanism
-    $_SESSION['token'] = bin2hex(random_bytes(32));
-    $_SESSION['token-expire'] = time() + 60 * 60;
-
+    if (empty($_SESSION['token'])) {
+      $_SESSION['token'] = bin2hex(random_bytes(32));
+      error_log('GET/token=' . $_SESSION['token']);
+      $_SESSION['token-expire'] = time() + 60 * 60;
+    }
 
     // sanitize $_GET variable url
     $sanitized_url = rtrim((isset($_GET['url']) ? $_GET['url'] : null), '/');
