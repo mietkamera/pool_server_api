@@ -81,6 +81,23 @@ class Bootstrap
         $method = empty($url[1]) ? 'help' : $url[1];
         $shorttag = empty($url[2]) ? '' : substr($url[2], 0, _DEFAULT_SHORTTAG_LENGTH_);
         $parameter = !isset($url[3]) ? '' : $url[3];
+        if ($module="publish") {
+          if ($sh::publicUsageAllowed() || $sh::usageAllowedFromIP()) {
+            if (_DEBUG_LOG_)
+              error_log('publish image/video for ' . $shorttag);
+            require 'controllers/'.$module.'.php';
+            $controller = new $module;
+            if (method_exists($controller, $method)) {
+              if ($shorttag == '' || strlen($shorttag) == _DEFAULT_SHORTTAG_LENGTH_) {
+                $controller->{$method}($shorttag, $parameter);
+              } else
+                $this->exitWithError(500);
+            } else
+              $this->exitWithError(404);
+          } else
+            $this->exitWithError(500);
+          exit;
+        }
         // if we have an empty shorttag or an shorttag "help" show some information about the 
         // method of this module
         if ($shorttag == 'help' || ($method != 'help' && $shorttag == '')) {
