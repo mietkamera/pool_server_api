@@ -81,7 +81,7 @@ class Bootstrap
         $method = empty($url[1]) ? 'help' : $url[1];
         $shorttag = empty($url[2]) ? '' : substr($url[2], 0, _DEFAULT_SHORTTAG_LENGTH_);
         $parameter = !isset($url[3]) ? '' : $url[3];
-        if ($module="publish") {
+        if ($module == "publish") {
           if ($sh::publicUsageAllowed() || $sh::usageAllowedFromIP()) {
             if (_DEBUG_LOG_)
               error_log('publish image/video for ' . $shorttag);
